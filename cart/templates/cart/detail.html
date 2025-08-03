@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Ваша корзина{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4">
+    <h1 class="text-4xl font-bold mb-8" style="color: var(--lavender-deep);">Ваша корзина</h1>
+
+    <div x-data='cartPage({{ cart_items_json|safe }})'>
+        {% csrf_token %}
+        <div x-show="items.length > 0" x-cloak>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-2xl shadow-lg">
+                        <template x-for="item in items" :key="item.id">
+                            <div class="flex items-center p-6 border-b border-gray-200 last:border-b-0">
+                                <a :href="item.productUrl">
+                                    <img :src="item.imageUrl || '{% static 'images/placeholder.png' %}'" :alt="item.name" class="w-24 h-24 object-cover rounded-lg">
+                                </a>
+                                <div class="flex-grow ml-6">
+                                    <a :href="item.productUrl" class="font-bold text-lg hover:text-lavender-dark" x-text="item.name"></a>
+                                    <p class="text-sm text-secondary" x-text="item.variant_name"></p>
+                                    <button @click="removeItem(item)" class="text-sm text-red-500 hover:underline mt-2 inline-block">Удалить</button>
+                                </div>
+                                <div class="w-48 text-right flex flex-col items-end">
+                                    <div class="flex items-center justify-end border border-gray-200 rounded-full mb-2">
+                                        <button @click="updateQuantity(item, item.quantity - 1)" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-lavender-dark text-lg transition-colors">-</button>
+                                        <input type="text" class="w-10 text-center font-semibold text-base text-gray-800 border-none focus:ring-0" :value="item.quantity" @change="updateQuantity(item, parseInt($event.target.value))">
+                                        <button @click="updateQuantity(item, item.quantity + 1)" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-lavender-dark text-lg transition-colors">+</button>
+                                    </div>
+                                    <p class="font-bold mt-1 text-lg" x-text="formatPrice(item.price * item.quantity)"></p>
+                                    <p class="text-sm text-secondary" x-text="`${formatPrice(item.price)}/шт.`"></p>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-2xl shadow-lg p-6 sticky top-28">
+                        <h2 class="text-2xl font-bold mb-4">Итого</h2>
+                        <div class="flex justify-between mb-2 text-lg">
+                            <span><span x-text="itemCount"></span> товар(а) на сумму</span>
+                            <span x-text="formatPrice(totalPrice)"></span>
+                        </div>
+                        <div class="flex justify-between mb-4 text-lg">
+                            <span>Доставка</span>
+                            <span class="text-green-600 font-semibold">Бесплатно</span>
+                        </div>
+                        <div class="border-t pt-4 flex justify-between font-bold text-xl">
+                            <span>К оплате</span>
+                            <span x-text="formatPrice(totalPrice)"></span>
+                        </div>
+                        <a href="{% url 'orders:order_create' %}" class="block w-full text-center btn-primary py-3 font-medium mt-6">
+                            Перейти к оформлению
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div x-show="items.length === 0" x-cloak>
+            <div class="text-center py-24">
+                <i class="fas fa-shopping-cart text-6xl text-gray-300 mb-4"></i>
+                <h2 class="text-2xl font-bold text-gray-700">Ваша корзина пуста</h2>
+                <p class="text-gray-500 mt-2 mb-6">Самое время добавить в неё что-нибудь прекрасное.</p>
+                <a href="{% url 'store:product_list' %}" class="btn-primary px-8 py-3 font-medium">Перейти в каталог</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

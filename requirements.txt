@@ -1,0 +1,19 @@
+Django
+psycopg2-binary
+django-environ
+djangorestframework
+django-filter
+celery
+redis
+django-redis
+factory-boy
+Faker
+gunicorn
+django_cleanup
+drf-spectacular
+django-imagekit
+djangorestframework-simplejwt
+django-debug-toolbar
+python-slugify
+
+#pip install -r requirements.txt

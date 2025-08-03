@@ -1,0 +1,601 @@
+/* static/css/custom.css */
+
+:root {
+    --lavender-light: #F3F4FB;
+    --lavender-medium: #E0E2F5;
+    --lavender-dark: #8A63D2;
+    --lavender-deep: #4B3F72;
+    --text-primary: #1F2937;
+    --text-secondary: #6B7280;
+    --white: #FFFFFF;
+    --light-gray: #F9FAFB;
+    --border-color: #E5E7EB;
+    --sale-pink: #ec4899; /* Яркий розовый для акцента */
+}
+
+body {
+    background-color: var(--lavender-light);
+    color: var(--text-primary);
+    scroll-behavior: smooth;
+}
+
+/* Кнопки и интерактивные элементы */
+.btn-primary, .btn-secondary {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transform: translateY(0);
+}
+.btn-primary:hover, .btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(75, 63, 114, 0.15);
+}
+
+.btn-primary { background-color: var(--lavender-dark); color: var(--white); border-radius: 9999px; }
+.btn-primary:hover { background-color: #764fbb; }
+.btn-secondary { background-color: var(--white); color: var(--lavender-dark); border: 1px solid var(--lavender-medium); border-radius: 9999px; }
+.btn-secondary:hover { border-color: var(--lavender-dark); background-color: #F9F9FD; }
+
+
+/* Стили для бейджей на иконках в хедере */
+.header-icon-badge {
+    position: absolute;
+    top: -0.5rem;
+    right: -0.5rem;
+    height: 1.25rem;
+    width: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--lavender-dark);
+    color: white;
+    font-size: 0.75rem;
+    border-radius: 9999px;
+}
+
+/* === СТИЛИ ДЛЯ СЛАЙДЕРА === */
+.slider-container {
+    width: 100%;
+    height: 60vh; /* Высота слайдера */
+    min-height: 400px; /* Минимальная высота */
+    max-height: 550px;
+    border-radius: 1.5rem; /* Скругление углов */
+    overflow: hidden;
+    position: relative;
+    background-color: var(--lavender-medium);
+}
+.slider-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    width: 48px;
+    height: 48px;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(4px);
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--lavender-deep);
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    margin: 0 1rem;
+}
+.slider-arrow:hover {
+    background-color: white;
+    transform: translateY(-50%) scale(1.1);
+}
+.slider-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+.slider-dot:hover {
+    transform: scale(1.2);
+}
+
+
+/* === СТИЛИ ДЛЯ БЛОКА КАТЕГОРИЙ НА ГЛАВНОЙ === */
+.featured-category-card {
+    position: relative;
+    display: block;
+    height: 250px;
+    border-radius: 1rem;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.3s ease;
+}
+.featured-category-card:hover {
+    transform: scale(1.03);
+}
+.featured-category-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+}
+.featured-category-title {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+
+/* === СТИЛИ ДЛЯ КАРТОЧКИ ТОВАРА (V2) === */
+.product-card-v2 {
+    border-radius: 0.5rem;
+    transition: box-shadow 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+.product-card-v2:hover {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+.wishlist-btn-v2 {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.wishlist-btn-v2:hover {
+    background-color: white;
+    color: var(--sale-pink);
+    transform: scale(1.1);
+}
+.wishlist-btn-v2 .fa-heart.fas {
+    color: var(--sale-pink);
+}
+.product-status-available {
+    font-size: 0.875rem;
+    color: #22c55e;
+    font-weight: 500;
+}
+.product-dimensions-on-hover {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.3s ease, max-height 0.3s ease, margin-top 0.3s ease;
+}
+.group:hover .product-dimensions-on-hover {
+    opacity: 1;
+    max-height: 50px;
+    margin-top: 0.25rem;
+}
+.sale-price-text-v2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--sale-pink);
+    line-height: 1;
+}
+.default-price-text-v2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1;
+}
+.old-price-text-v2 {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    text-decoration: line-through;
+}
+.discount-badge-v2 {
+    background-color: var(--sale-pink);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 0.5rem;
+}
+.buy-button-v2 {
+    width: 40px;
+    height: 40px;
+    border-radius: 0.5rem;
+    background-color: var(--lavender-dark);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+.buy-button-v2:hover {
+    background-color: var(--lavender-deep);
+    transform: scale(1.05);
+}
+
+/* === СТИЛИ ДЛЯ ПАГИНАЦИИ === */
+.pagination-btn, .pagination-btn-active, .pagination-btn-disabled {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem; /* 40px */
+    height: 2.5rem; /* 40px */
+    font-weight: 600;
+    border-radius: 0.5rem; /* 8px */
+    margin: 0 0.25rem; /* 4px */
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+/* Стандартная кнопка */
+.pagination-btn {
+    background-color: white;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+.pagination-btn:hover {
+    background-color: var(--lavender-light);
+    color: var(--lavender-deep);
+    border-color: var(--lavender-medium);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+/* Активная кнопка (текущая страница) */
+.pagination-btn-active {
+    z-index: 10;
+    background-color: var(--lavender-dark);
+    border-color: var(--lavender-dark);
+    color: white;
+    cursor: default;
+    box-shadow: 0 4px 10px rgba(138, 99, 210, 0.3);
+}
+
+/* Отключенная кнопка (многоточие) */
+.pagination-btn-disabled {
+    background-color: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: default;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.pagination-goto-input {
+    width: 4rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+    text-align: center;
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    color: var(--text-primary);
+}
+.pagination-goto-input:focus {
+    outline: none;
+    border-color: var(--lavender-dark);
+    box-shadow: 0 0 0 2px rgba(138, 99, 210, 0.2);
+}
+
+.pagination-goto-btn {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+    background-color: #E5E7EB; /* gray-200 */
+    color: var(--text-secondary);
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+.pagination-goto-btn:hover {
+    background-color: #D1D5DB; /* gray-300 */
+}
+
+/* === СТИЛИ ДЛЯ ПОИСКА === */
+.search-results-container {
+    background-color: var(--white);
+    border-radius: 0 0 1rem 1rem;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    max-height: 70vh;
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+.search-suggestion-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+    transition: background-color 0.2s ease-in-out;
+}
+.search-suggestion-item:hover {
+    background-color: var(--lavender-light);
+}
+.search-suggestion-item img {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    margin-right: 1rem;
+}
+.search-suggestion-item .item-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+.search-suggestion-item .item-name strong {
+    color: var(--lavender-dark);
+}
+.search-suggestion-item .item-price-sale {
+    font-weight: 700;
+    color: var(--sale-pink);
+}
+.search-suggestion-item .item-price-old {
+    color: var(--text-secondary);
+    text-decoration: line-through;
+    margin-left: 0.5rem;
+}
+.search-all-results-btn {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    font-weight: 700;
+    text-align: center;
+    border-radius: 0.75rem;
+    background-color: var(--lavender-light);
+    color: var(--lavender-dark);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.search-all-results-btn:hover {
+    background-color: var(--lavender-dark);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(138, 99, 210, 0.2);
+}
+.search-all-results-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease;
+}
+.search-all-results-btn:active::before {
+    width: 300px;
+    height: 300px;
+    transition: width 0s, height 0s;
+}
+
+/* === СТИЛИ ДЛЯ СТРАНИЦЫ ТОВАРА === */
+.product-badge-discount {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background-color: #ef4444; /* red-500 */
+    color: white;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: bold;
+    border-radius: 9999px;
+}
+.promo-banner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background-color: #fce7f3; /* pink-100 */
+    padding: 1rem;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.promo-banner:hover {
+    background-color: #fbcfe8; /* pink-200 */
+}
+.variant-swatch-item {
+    position: relative;
+    width: 4rem; /* 64px */
+    height: 4rem; /* 64px */
+    border-radius: 0.5rem;
+    border: 2px solid #e5e7eb; /* gray-200 */
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    overflow: hidden;
+}
+.variant-swatch-item:not(.disabled):hover {
+    border-color: var(--lavender-dark);
+}
+.variant-swatch-item.active {
+    border-color: var(--lavender-deep);
+    box-shadow: 0 0 0 2px var(--lavender-deep);
+}
+.variant-swatch-item.disabled {
+    cursor: not-allowed;
+    filter: grayscale(80%);
+}
+
+.info-tabs {
+    display: flex;
+    gap: 2rem;
+}
+.info-tab {
+    padding-bottom: 0.75rem;
+    border-bottom: 3px solid transparent;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transition: all 0.2s ease-in-out;
+}
+.info-tab:hover {
+    color: var(--text-primary);
+}
+.info-tab.active {
+    color: var(--lavender-deep);
+    border-color: var(--lavender-deep);
+}
+
+.char-section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+.char-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.75rem 0;
+    font-size: 0.875rem;
+    border-bottom: 1px solid #f3f4f6; /* gray-100 */
+}
+.char-item:last-child {
+    border-bottom: none;
+}
+.char-key {
+    color: var(--text-secondary);
+    padding-right: 1rem;
+}
+.char-value {
+    font-weight: 500;
+    color: var(--text-primary);
+    text-align: right;
+}
+
+/* === СТИЛИ ДЛЯ ОТЗЫВОВ === */
+.review-filter-btn, .review-filter-btn-active {
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-weight: 500;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+}
+.review-filter-btn {
+    background-color: white;
+    color: var(--text-primary);
+}
+.review-filter-btn:hover {
+    background-color: var(--lavender-light);
+    border-color: var(--lavender-medium);
+}
+.review-filter-btn-active {
+    background-color: var(--lavender-deep);
+    color: white;
+    border-color: var(--lavender-deep);
+}
+.review-sort-select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 0.5rem 2.5rem 0.5rem 1rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+.review-item {
+    display: flex;
+    gap: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1.5rem;
+}
+.review-author-avatar {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--lavender-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--lavender-dark);
+}
+.review-action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+}
+.review-action-btn:hover {
+    color: var(--lavender-dark);
+}
+
+/* === СТИЛИ ДЛЯ СЛАЙДЕРА ЦЕН === */
+input[type="range"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 100%;
+  outline: none;
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  background-color: transparent;
+  pointer-events: none;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  -webkit-appearance: none;
+  height: 3px;
+}
+input[type="range"]::-moz-range-track {
+  -moz-appearance: none;
+  height: 3px;
+}
+input[type="range"]::-ms-track {
+  appearance: none;
+  height: 3px;
+}
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 1.25rem; /* 20px */
+  width: 1.25rem; /* 20px */
+  background-color: var(--lavender-dark);
+  cursor: pointer;
+  margin-top: -9px;
+  pointer-events: auto;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+input[type="range"]::-moz-range-thumb {
+  appearance: none;
+  -moz-appearance: none;
+  height: 1.25rem;
+  width: 1.25rem;
+  cursor: pointer;
+  border-radius: 50%;
+  pointer-events: auto;
+  background-color: var(--lavender-dark);
+  border: 2px solid white;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+input[type="range"]::-ms-thumb {
+  appearance: none;
+  height: 1.25rem;
+  width: 1.25rem;
+  cursor: pointer;
+  border-radius: 50%;
+  pointer-events: auto;
+  background-color: var(--lavender-dark);
+  border: 2px solid white;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}

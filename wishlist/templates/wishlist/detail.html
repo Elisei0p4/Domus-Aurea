@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Избранное{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4">
+    <h1 class="text-4xl font-bold mb-8" style="color: var(--lavender-deep);">Избранные товары</h1>
+
+    {% if wishlist %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {% for product in wishlist %}
+                {% include 'store/partials/_product_card.html' with product=product %}
+            {% endfor %}
+        </div>
+    {% else %}
+    <div class="text-center py-24">
+        <i class="far fa-heart text-6xl text-gray-300 mb-4"></i>
+        <h2 class="text-2xl font-bold text-gray-700">В избранном пока пусто</h2>
+        <p class="text-gray-500 mt-2 mb-6">Добавьте товары, которые вам понравились, чтобы не потерять их.</p>
+        <a href="{% url 'store:product_list' %}" class="btn-primary px-8 py-3 font-medium">Перейти в каталог</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

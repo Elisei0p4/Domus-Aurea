@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if tag %}{{ tag.name }}{% else %}Наш блог{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4">
+    <div class="mb-8 text-center">
+        <h1 class="text-5xl font-bold mb-2" style="color: var(--lavender-deep);">
+            {% if tag %}Статьи с тегом: {{ tag.name }}{% else %}Наш блог{% endif %}
+        </h1>
+        <p class="text-lg text-secondary">Вдохновение, советы и идеи для вашего идеального дома.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <!-- Основной контент: Статьи -->
+        <div class="lg:col-span-2 space-y-12">
+            {% for article in articles %}
+                {% include 'blog/partials/_article_card.html' with article=article %}
+            {% empty %}
+                <div class="bg-white p-8 rounded-2xl text-center">
+                    <p class="text-lg text-secondary">Статей в этой категории пока нет.</p>
+                </div>
+            {% endfor %}
+            
+            <!-- Пагинация -->
+            {% if articles.has_other_pages %}
+                {% include 'partials/pagination.html' with page_obj=articles %}
+            {% endif %}
+        </div>
+
+        <!-- Боковая панель -->
+        <aside class="lg:col-span-1">
+            {% include 'blog/partials/_sidebar.html' %}
+        </aside>
+    </div>
+</div>
+{% endblock %}

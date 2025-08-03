@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if category %}{{ category.name }}{% else %}Магазин{% endif %}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4">
+    <!-- Хлебные крошки -->
+    <nav class="text-sm mb-6" aria-label="Breadcrumb">
+        <ol class="list-none p-0 inline-flex items-center">
+            <li class="flex items-center">
+                <a href="{% url 'store:home' %}" class="text-secondary hover:text-lavender-dark" title="Главная">
+                    <i class="fas fa-home"></i>
+                </a>
+                <i class="fas fa-angle-right mx-2 text-gray-400"></i>
+            </li>
+            <li class="flex items-center"><a href="{% url 'store:product_list' %}" class="text-secondary hover:text-lavender-dark">Каталог</a></li>
+            {% if category %}<li class="flex items-center"><i class="fas fa-angle-right mx-2 text-gray-400"></i><span class="text-text-primary">{{ category.name }}</span></li>{% endif %}
+        </ol>
+    </nav>
+    
+    <div class="mb-8">
+        <h1 class="text-4xl font-bold" style="color: var(--lavender-deep);">{% if category %}{{ category.name }}{% else %}Все товары{% endif %}</h1>
+        {% if category.description %}<p class="mt-2 text-secondary">{{ category.description }}</p>{% endif %}
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+        
+        <aside class="lg:col-span-1">
+            <div class="filter-sidebar" x-data="priceRangeSlider(
+                {{ filter_form.min_price.value|default:0 }}, 
+                {{ filter_form.max_price.value|default:100000 }}, 
+                0, 
+                100000
+            )">
+                <form method="get">
+                    {% csrf_token %}
+                    <h3 class="text-xl font-bold mb-6">Фильтры</h3>
+                    
+                    <div class="filter-section">
+                        <label class="filter-label">Цена</label>
+                        <div class="flex items-center justify-between text-sm mb-2">
+                            <input type="number" name="min_price" x-model.number="minPrice" class="filter-input-range w-2/5">
+                             <span class="text-gray-400">-</span>
+                            <input type="number" name="max_price" x-model.number="maxPrice" class="filter-input-range w-2/5">
+                        </div>
+                        <div class="relative h-5">
+                            <div class="absolute top-1/2 -translate-y-1/2 w-full h-1 bg-gray-200 rounded-full">
+                                <div class="absolute h-1 bg-lavender-dark rounded-full" :style="`left: ${minPercent}%; right: ${100 - maxPercent}%`"></div>
+                            </div>
+                            <input type="range" :min="absMin" :max="absMax" x-model.number="minPrice" @input="updateMin" class="absolute w-full h-1 opacity-0 pointer-events-auto">
+                            <input type="range" :min="absMin" :max="absMax" x-model.number="maxPrice" @input="updateMax" class="absolute w-full h-1 opacity-0 pointer-events-auto">
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <label for="{{ filter_form.ordering.id_for_label }}" class="filter-label">{{ filter_form.ordering.label }}</label>
+                        {{ filter_form.ordering }}
+                    </div>
+
+                    <div class="mt-8 space-y-2">
+                        <button type="submit" class="w-full btn-primary px-6 py-2.5">Подобрать</button>
+                        <a href="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'store:product_list' %}{% endif %}" class="w-full block text-center btn-secondary px-6 py-2.5">Сбросить</a>
+                    </div>
+                </form>
+            </div>
+        </aside>
+
+        <div class="lg:col-span-3">
+            {% if products %}
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {% for product in products %}
+                        {% include 'store/partials/_product_card.html' with product=product %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-16">
+                    <i class="fas fa-box-open text-6xl text-gray-300 mb-4"></i>
+                    <h2 class="text-2xl font-bold text-gray-700">Товары не найдены</h2>
+                    <p class="text-gray-500 mt-2">Попробуйте изменить параметры фильтра или сбросить их.</p>
+                </div>
+            {% endif %}
+
+            {% if products.has_other_pages %}
+                <div class="mt-12">
+                     {% include 'partials/pagination.html' with page_obj=products %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

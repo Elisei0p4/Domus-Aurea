@@ -1,0 +1,35 @@
+# --- Git ---
+.git
+.gitignore
+
+# --- Docker ---
+.dockerignore
+docker-compose.override.yml
+Dockerfile
+
+# --- Файлы окружения ---
+.env
+.env.*
+!.env.example
+
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+venv/
+env/
+.venv/
+pip-log.txt
+
+# --- IDE & Редакторы кода ---
+.vscode/
+.idea/
+.history/
+
+# --- Системные файлы ---
+.DS_Store
+Thumbs.db
+
+# --- Node.js (на случай, если вы добавите frontend сборку) ---
+node_modules/
+npm-debug.log

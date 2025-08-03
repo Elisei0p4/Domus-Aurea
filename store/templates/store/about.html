@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}О нас{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-2xl shadow-lg p-8 lg:p-12">
+    <div class="max-w-4xl mx-auto">
+        <div class="text-center">
+            <h1 class="text-5xl font-bold mb-4" style="color: var(--lavender-deep);">Наша история</h1>
+            <p class="text-lg text-secondary max-w-2xl mx-auto">
+                Domus Aurea родился из страсти к красивым интерьерам и качественной мебели. Мы верим, что дом — это не просто место, а отражение вашей личности, и каждая деталь в нем имеет значение.
+            </p>
+        </div>
+
+        <div class="my-12">
+            <img src="https://images.unsplash.com/photo-1540574163024-588462b3b7c8?auto=format&fit=crop&w=1200&q=80" class="rounded-2xl shadow-md w-full h-auto object-cover" alt="Мастерская Domus Aurea">
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-3xl font-bold mb-4" style="color: var(--lavender-deep);">Наша философия</h2>
+                <p class="text-secondary mb-4">
+                    Мы создаем не просто мебель, а эмоции. Наша цель — предложить вам предметы интерьера, которые будут радовать глаз, служить долгие годы и создавать атмосферу уюта и гармонии в вашем доме. Мы тщательно отбираем материалы, работаем с лучшими дизайнерами и мастерами, чтобы каждый наш продукт был произведением искусства.
+                </p>
+                <ul class="space-y-3 text-secondary">
+                    <li class="flex items-start"><i class="fas fa-check-circle text-lavender-dark mt-1 mr-3"></i><span><b>Качество без компромиссов:</b> Только лучшие материалы и проверенные технологии.</span></li>
+                    <li class="flex items-start"><i class="fas fa-check-circle text-lavender-dark mt-1 mr-3"></i><span><b>Уникальный дизайн:</b> Эксклюзивные коллекции, которые вы не найдете больше нигде.</span></li>
+                    <li class="flex items-start"><i class="fas fa-check-circle text-lavender-dark mt-1 mr-3"></i><span><b>Забота о клиенте:</b> Мы всегда на связи, чтобы помочь вам с выбором и ответить на любые вопросы.</span></li>
+                </ul>
+            </div>
+            <div>
+                <img src="https://images.unsplash.com/photo-1598928811893-233a3b537c35?auto=format&fit=crop&w=600&q=80" class="rounded-2xl shadow-md" alt="Детали мебели">
+            </div>
+        </div>
+
+        <div class="text-center mt-16">
+            <h2 class="text-3xl font-bold mb-4" style="color: var(--lavender-deep);">Присоединяйтесь к нам</h2>
+            <p class="text-lg text-secondary max-w-2xl mx-auto mb-6">
+                Давайте вместе создавать пространства, в которые хочется возвращаться.
+            </p>
+            <a href="{% url 'store:product_list' %}" class="btn-primary px-8 py-3 font-medium">Перейти в каталог</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
