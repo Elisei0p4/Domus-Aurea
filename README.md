@@ -24,9 +24,11 @@
 
 4. docker-compose up --build
 
-5. docker-compose exec web python manage.py createsuperuser
+5. docker-compose exec web python manage.py migrate
 
-6. docker-compose exec web python manage.py seed_db
+6. docker-compose exec web python manage.py createsuperuser
+
+7. docker-compose exec web python manage.py seed_db
 
 ## Страница доступна по адресу http://127.0.0.1:8000
 
