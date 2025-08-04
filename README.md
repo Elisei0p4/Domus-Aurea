@@ -44,3 +44,28 @@
 1. Клонируйте репозиторий:
 ```bash
 git clone https://github.com/Elisei0p4/Domus-Aurea.git
+```
+2.Перейдите в директорию проекта:
+```bash
+cd Domus-Aurea
+```
+3. Настройте окружение:
+```bash
+cp .env.example .env
+```
+4. Запустите сервисы:
+```bash
+docker-compose up --build
+```
+5.Примените миграции:
+```bash
+docker-compose exec web python manage.py migrate
+```
+6. Создайте суперпользователя:
+```bash
+docker-compose exec web python manage.py createsuperuser
+```
+7.Заполните базу тестовыми данными:
+```bash
+docker-compose exec web python manage.py seed_db
+```
