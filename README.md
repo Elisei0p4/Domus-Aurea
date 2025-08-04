@@ -8,16 +8,6 @@
   [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17.5-336791?logo=postgresql)](https://www.postgresql.org/)
   [![Docker](https://img.shields.io/badge/Docker-28.3-2496ED?logo=docker)](https://www.docker.com/)
   
-</div>
-
-## 🌌 Введение
-
-<div align="center">
-  
-  » *Элегантность в каждой детали«*
-  
-</div>
-
 **Domus Aurea** — это премиальная платформа для продажи дизайнерской мебели, сочетающая в себе:
 
 - 🪑 Кураторскую подборку предметов интерьера  
