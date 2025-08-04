@@ -8,56 +8,6 @@
   [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17.5-336791?logo=postgresql)](https://www.postgresql.org/)
   [![Docker](https://img.shields.io/badge/Docker-28.3-2496ED?logo=docker)](https://www.docker.com/)
   
-**Domus Aurea** — это премиальная платформа для продажи дизайнерской мебели, сочетающая в себе:
-
-- 🪑 Кураторскую подборку предметов интерьера  
-- 💎 Эксклюзивные коллекции от мировых дизайнеров  
-- 🛠️ Технологичную платформу с бесшовным UX  
-
-## 🧩 Технологический стек
-
-### **Backend Alchemy**
-<p align="center">
-  <img src="https://img.icons8.com/color/48/000000/python.png" alt="Python" width="40"/>
-  <img src="https://img.icons8.com/material-outlined/48/000000/django.png" alt="Django" width="40"/>
-  <img src="https://img.icons8.com/ios/50/000000/api.png" alt="DRF" width="40"/>
-</p>
-
-- Python 3.11 (типизация + async)  
-- Django 4.2 + Django REST Framework  
-- Celery + Redis (асинхронные задачи)  
-
-### **Frontend Symphony**
-<p align="center">
-  <img src="https://img.icons8.com/color/48/000000/tailwindcss.png" alt="Tailwind" width="40"/>
-  <img src="https://img.icons8.com/ios-filled/50/000000/alpine-js.png" alt="Alpine" width="40"/>
-</p>
-
-- Tailwind CSS (JIT-компиляция)  
-- Alpine.js (микровзаимодействия)  
-- HTMX (динамические интерфейсы)  
-
-### **Infrastructure**
-```mermaid
-graph LR
-  A[Docker] --> B[PostgreSQL]
-  A --> C[Redis]
-  A --> D[CI/CD Pipeline]
-
-
-# 1. Клонировать хранилище
-git clone https://github.com/Elisei0p4/Domus-Aurea.git && cd Domus-Aurea
-
-# 2. Инициализировать окружение
-cp .env.example .env && docker-compose up --build -d
-
-# 3. Запустить миграции
-docker-compose exec web python manage.py migrate
-
-# 4. Создать администратора (email: admin@domus-aurea.com)
-docker-compose exec web python manage.py createsuperuser
-
-
 
 # 🛋 Domus Aurea — мебельный e-commerce на Django
 
