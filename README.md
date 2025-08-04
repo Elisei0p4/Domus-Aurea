@@ -56,7 +56,7 @@
 ```bash
 git clone https://github.com/Elisei0p4/Domus-Aurea.git
 ```
-2.Перейдите в директорию проекта:
+2. Перейдите в директорию проекта:
 ```bash
 cd Domus-Aurea
 ```
@@ -68,7 +68,7 @@ cp .env.example .env
 ```bash
 docker-compose up --build
 ```
-5.Примените миграции:
+5. Примените миграции:
 ```bash
 docker-compose exec web python manage.py migrate
 ```
@@ -76,7 +76,7 @@ docker-compose exec web python manage.py migrate
 ```bash
 docker-compose exec web python manage.py createsuperuser
 ```
-8.Заполните базу тестовыми данными:
+8. Заполните базу тестовыми данными:
 ```bash
 docker-compose exec web python manage.py seed_db
 ```
