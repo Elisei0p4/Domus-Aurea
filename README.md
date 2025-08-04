@@ -78,6 +78,13 @@ docker-compose exec web python manage.py seed_db
 docker-compose exec web python manage.py test
 ```
 
+# 🪑 Domus Aurea <sup>*Luxury Furniture E-Commerce*</sup>
+
 > **Примечание**: Этот проект находится в активной разработке.  
 > [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 > [![Django](https://img.shields.io/badge/Django-4.2.8-informational)](https://djangoproject.com)
+
+<div align="center">
+  <img src="docs/demo.gif" width="800" alt="Демонстрация работы">
+  <p><em>Демонстрация основного функционала</em> • [Смотреть полную версию][demo-full]</p>
+</div>
