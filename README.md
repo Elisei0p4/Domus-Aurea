@@ -76,7 +76,7 @@ docker-compose exec web python manage.py migrate
 ```bash
 docker-compose exec web python manage.py createsuperuser
 ```
-7.Заполните базу тестовыми данными:
+8.Заполните базу тестовыми данными:
 ```bash
 docker-compose exec web python manage.py seed_db
 ```
