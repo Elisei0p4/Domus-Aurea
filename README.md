@@ -4,9 +4,9 @@
 
 **Премиум мебельный e-commerce на Django**
 
-![Django](https://img.shields.io/badge/Django-5.2.4-092E20?logo=django&style=for-the-badge)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17.5-336791?logo=postgresql&style=for-the-badge)
-![Docker](https://img.shields.io/badge/Docker-28.3-2496ED?logo=docker&style=for-the-badge)
+[![Django](https://img.shields.io/badge/Django-5.2.4-092E20?logo=django)](https://www.djangoproject.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17.5-336791?logo=postgresql)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-28.3-2496ED?logo=docker)](https://www.docker.com/)
 
 </div>
 
