@@ -77,3 +77,7 @@ docker-compose exec web python manage.py seed_db
 ```bash
 docker-compose exec web python manage.py test
 ```
+
+> **Примечание**: Этот проект находится в активной разработке.  
+> [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+> [![Django](https://img.shields.io/badge/Django-4.2.8-informational)](https://djangoproject.com)
