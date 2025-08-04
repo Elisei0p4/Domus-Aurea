@@ -1,19 +1,20 @@
-# ✨ DOMUS AUREA
+<div align="center">
 
-  ![Header Banner](https://via.placeholder.com/1200x400/2d2d2d/ffffff?text=DOMUS+AUREA+PREMIUM+FURNITURE)
-  
-  [![Django](https://img.shields.io/badge/Django-5.2.4-092E20?logo=django)](https://www.djangoproject.com/)
-  [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17.5-336791?logo=postgresql)](https://www.postgresql.org/)
-  [![Docker](https://img.shields.io/badge/Docker-28.3-2496ED?logo=docker)](https://www.docker.com/)
+# 🛋 DOMUS AUREA
 
+**Премиум мебельный e-commerce на Django**
 
+![Django](https://img.shields.io/badge/Django-5.2.4-092E20?logo=django&style=for-the-badge)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17.5-336791?logo=postgresql&style=for-the-badge)
+![Docker](https://img.shields.io/badge/Docker-28.3-2496ED?logo=docker&style=for-the-badge)
 
+</div>
 
 Привет! 👋 Рад, что вы заинтересовались этим проектом.
 
 **Domus Aurea** — это полнофункциональная e-commerce платформа для продажи мебели, разработанная на Django и Django REST Framework. Проект полностью контейнеризирован с помощью Docker и готов к развертыванию.
 
-## 🛠 Технологический стек
+## Технологический стек
 
 ### Backend
 - Python 3.11
