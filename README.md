@@ -55,6 +55,18 @@ graph LR
   A --> D[CI/CD Pipeline]
 
 
+# 1. Клонировать хранилище
+git clone https://github.com/Elisei0p4/Domus-Aurea.git && cd Domus-Aurea
+
+# 2. Инициализировать окружение
+cp .env.example .env && docker-compose up --build -d
+
+# 3. Запустить миграции
+docker-compose exec web python manage.py migrate
+
+# 4. Создать администратора (email: admin@domus-aurea.com)
+docker-compose exec web python manage.py createsuperuser
+
 
 
 # 🛋 Domus Aurea — мебельный e-commerce на Django
