@@ -1,4 +1,4 @@
-# ✨ DOMUS AUREA | Luxury Furniture E-Commerce
+# ✨ DOMUS AUREA
 
 <div align="center">
   
