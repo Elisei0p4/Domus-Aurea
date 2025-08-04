@@ -1,6 +1,5 @@
 # ✨ DOMUS AUREA
 
-<div align="center">
   
   ![Header Banner](https://via.placeholder.com/1200x400/2d2d2d/ffffff?text=DOMUS+AUREA+PREMIUM+FURNITURE)
   
