@@ -25,7 +25,7 @@
     <a href="#-ключевые-особенности">Особенности</a> |
     <a href="#-технологический-стек">Технологии</a> |
     <a href="#-быстрый-старт">Быстрый старт</a> |
-    <a href="#-api-документация">API</a>
+    <a href="#api-документация">API</a>
   </h4>
 
 </div>
@@ -126,11 +126,12 @@
 
 ---
 
-## 📚 API Документация
+<div align="center">
 
-API проекта автоматически документируется с помощью `drf-spectacular`. После запуска проекта документация доступна по ссылкам ниже. Это и есть те самые "не синие" ссылки, которые вы хотели!
+<h2 id="api-документация">📚 API Документация</h2>
 
-<p align="center">
+<p>После успешного запуска проекта на вашем компьютере, документация будет доступна по локальным адресам:</p>
+
   <a href="http://localhost:8000/api/schema/swagger-ui/">
     <img src="https://img.shields.io/badge/Swagger%20UI-Документация-85EA2D?style=for-the-badge&logo=swagger&logoColor=black" alt="Swagger UI">
   </a>
@@ -138,13 +139,16 @@ API проекта автоматически документируется с 
   <a href="http://localhost:8000/api/schema/redoc/">
     <img src="https://img.shields.io/badge/ReDoc-Документация-red?style=for-the-badge&logo=redoc&logoColor=white" alt="ReDoc">
   </a>
-</p>
+
+</div>
 
 ---
 
-## 🧪 Тестирование
+<div align="center">
 
-Для гарантии качества кода в проекте настроены тесты. Для их запуска выполните:
+<h2 id="тестирование">🧪 Тестирование</h2>
+
+<p>Для гарантии качества кода в проекте настроены тесты. Для их запуска выполните:</p>
 
 ```bash
 docker-compose exec web python manage.py test
