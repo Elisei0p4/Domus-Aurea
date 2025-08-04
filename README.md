@@ -14,7 +14,16 @@
 
 **Domus Aurea** — это полнофункциональная e-commerce платформа для продажи мебели, разработанная на Django и Django REST Framework. Проект полностью контейнеризирован с помощью Docker и готов к развертыванию.
 
-## Технологический стек
+## 🛠 Технологический стек
+
+<div align="center">
+
+```mermaid
+graph LR
+  A[Backend] --> B[Frontend]
+  A --> C[Базы данных]
+  A --> D[Инфраструктура]
+</div>
 
 ### Backend
 - Python 3.11
