@@ -9,7 +9,8 @@
   [![Docker](https://img.shields.io/badge/Docker-28.3-2496ED?logo=docker)](https://www.docker.com/)
   
 
-# 🛋 Domus Aurea — мебельный e-commerce на Django
+
+
 
 Привет! 👋 Рад, что вы заинтересовались этим проектом.
 
