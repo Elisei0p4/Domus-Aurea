@@ -5,7 +5,7 @@
   ![Header Banner](https://via.placeholder.com/1200x400/2d2d2d/ffffff?text=DOMUS+AUREA+PREMIUM+FURNITURE)
   
   [![Django](https://img.shields.io/badge/Django-5.2.4-092E20?logo=django)](https://www.djangoproject.com/)
-  [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-336791?logo=postgresql)](https://www.postgresql.org/)
+  [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17.5-336791?logo=postgresql)](https://www.postgresql.org/)
   [![Docker](https://img.shields.io/badge/Docker-24.0-2496ED?logo=docker)](https://www.docker.com/)
   
 </div>
