@@ -16,15 +16,6 @@
 
 ## 🛠 Технологический стек
 
-<div align="center">
-
-```mermaid
-graph LR
-  A[Backend] --> B[Frontend]
-  A --> C[Базы данных]
-  A --> D[Инфраструктура]
-</div>
-
 ### Backend
 - Python 3.11
 - Django
