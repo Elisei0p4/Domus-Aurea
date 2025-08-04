@@ -69,3 +69,9 @@ docker-compose exec web python manage.py createsuperuser
 ```bash
 docker-compose exec web python manage.py seed_db
 ```
+
+~~~Тестирование
+
+Для запуска тестов выполните:
+
+
