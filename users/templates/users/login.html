@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Вход в аккаунт{% endblock %}
+
+{% block content %}
+<div class="min-h-[70vh] flex items-center justify-center py-12 px-4">
+    <div class="max-w-4xl w-full bg-white rounded-2xl shadow-2xl flex overflow-hidden">
+        
+        <!-- Левая колонка: Форма -->
+        <div class="w-full lg:w-1/2 p-8 lg:p-12">
+            <h1 class="text-3xl font-bold text-center mb-8" style="color: var(--lavender-deep);">Вход в аккаунт</h1>
+            
+            <form method="post" action="{% url 'users:login' %}">
+                {% csrf_token %}
+                <div class="space-y-6">
+                    <div>
+                        <label for="{{ form.username.id_for_label }}" class="block text-secondary text-sm font-bold mb-2">Имя пользователя:</label>
+                        {{ form.username }}
+                    </div>
+                    <div>
+                        <label for="{{ form.password.id_for_label }}" class="block text-secondary text-sm font-bold mb-2">Пароль:</label>
+                        {{ form.password }}
+                    </div>
+                </div>
+                <button type="submit" class="w-full btn-primary py-3 font-medium mt-8">Войти</button>
+            </form>
+
+            <p class="text-center text-secondary text-sm mt-6">
+                Нет аккаунта? <a href="{% url 'users:register' %}" class="font-bold text-lavender-dark hover:underline">Зарегистрироваться</a>
+            </p>
+        </div>
+
+        <!-- Правая колонка: Изображение-фон -->
+        <div class="hidden lg:flex w-1/2 relative items-end justify-center p-12 text-white" style="background-image: url('{% static 'images/backLog.jpg' %}'); background-size: cover; background-position: center;">
+            <div class="absolute inset-0 bg-black/40"></div>
+             <div class="relative text-center">
+                <h2 class="text-3xl font-bold">С возвращением!</h2>
+                <p class="mt-2 text-lg opacity-90">Ваш идеальный дом ждет вас.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

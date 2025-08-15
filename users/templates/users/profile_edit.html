@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Редактирование профиля{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <a href="{% url 'store:account' %}" class="text-lavender-dark hover:underline mb-4 inline-block"><i class="fas fa-arrow-left mr-2"></i>Назад в аккаунт</a>
+    <h1 class="text-4xl font-bold mb-8" style="color: var(--lavender-deep);">Редактирование профиля</h1>
+
+    <div class="bg-white p-8 rounded-2xl shadow-lg">
+        <form method="post">
+            {% csrf_token %}
+            <div class="space-y-4">
+                {% for field in form %}
+                <div>
+                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <p class="text-red-500 text-xs mt-1">{{ field.errors.as_text }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="mt-8 flex items-center gap-4">
+                <button type="submit" class="btn-primary py-2.5 px-6 font-medium">Сохранить изменения</button>
+                <a href="{% url 'store:account' %}" class="text-secondary hover:underline text-sm">Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

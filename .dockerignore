@@ -1,0 +1,51 @@
+# --- Git ---
+.git
+.gitignore
+.gitattributes
+
+# --- Docker ---
+.dockerignore
+docker-compose.override.yml
+Dockerfile
+
+# --- Файлы окружения ---
+.env
+.env.*
+!.env.example
+
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+venv/
+env/
+.venv/
+pip-log.txt
+pip-wheel-metadata/
+.pip-cache/
+db.sqlite3
+db.sqlite3-journal
+celerybeat-schedule
+
+# --- IDE & Редакторы кода ---
+.vscode/
+.idea/
+.history/
+
+# --- Системные файлы ---
+.DS_Store
+Thumbs.db
+
+# --- Node.js ---
+node_modules/
+npm-debug.log
+
+# --- Статика и Медиа ---
+/staticfiles/
+/media/
+
+# --- Инструменты ---
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load comparison_tags %}
+
+{% block title %}Сравнение товаров{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4">
+    <div class="flex flex-col md:flex-row justify-between md:items-center mb-8">
+        <h1 class="text-4xl font-bold" style="color: var(--lavender-deep);">Сравнение товаров ({{ comparison|length }})</h1>
+        {% if comparison %}
+        <form action="{% url 'comparison:comparison_clear' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="text-sm text-red-500 hover:underline mt-2 md:mt-0">
+                <i class="far fa-trash-alt mr-1"></i>Очистить список
+            </button>
+        </form>
+        {% endif %}
+    </div>
+
+    {% if products %}
+    <div class="overflow-x-auto bg-white rounded-2xl shadow-lg">
+        <div class="min-w-[1000px]">
+            <!-- Верхняя "прилипающая" строка с товарами -->
+            <div class="sticky top-[136px] z-20 grid grid-cols-4 bg-white shadow-md" style="grid-template-columns: 200px repeat({{ products|length }}, 1fr);">
+                <div class="p-4 border-r border-b font-bold text-lg flex items-center">Характеристики</div>
+                {% for product in products %}
+                <div class="p-4 border-r border-b text-center">
+                    <a href="{{ product.get_absolute_url }}" class="block">
+                        <img src="{{ product.get_main_image_url }}" alt="{{ product.name }}" class="w-full h-32 object-contain mx-auto mb-2">
+                        <h3 class="font-semibold text-sm hover:text-lavender-dark transition-colors">{{ product.name }}</h3>
+                    </a>
+                    <p class="font-bold text-lg my-2">{{ product.final_price|floatformat:"0" }} ₽</p>
+                    <button @click.prevent="handleUserAction($el, 'cart', 'add')" data-product-id="{{ product.id }}" class="btn-primary w-full !rounded-lg py-1.5 text-sm font-semibold">В корзину</button>
+                    <button @click.prevent="handleUserAction($el, 'comparison', 'toggle').then(() => window.location.reload())" data-product-id="{{ product.id }}" class="text-xs text-secondary hover:text-red-500 mt-2">Убрать</button>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Основная таблица характеристик -->
+            <div class="grid grid-cols-4" style="grid-template-columns: 200px repeat({{ products|length }}, 1fr);">
+                {% for group_name, chars in all_char_groups.items %}
+                    <!-- Заголовок группы -->
+                    <div class="col-span-full bg-lavender-light p-2 pl-4 border-b border-t font-bold text-lavender-deep">{{ group_name }}</div>
+                    
+                    {% for char_key in chars %}
+                        <!-- Строка характеристики -->
+                        <div class="p-4 border-r border-b text-sm text-secondary flex items-center">{{ char_key }}</div>
+                        {% for product in products %}
+                            <div class="p-4 border-r border-b text-sm font-medium">
+                                {% with char_value=product.characteristics|get_item:group_name|get_item:char_key %}
+                                    {{ char_value|default:"—" }}
+                                {% endwith %}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-24">
+        <i class="fas fa-balance-scale-left text-6xl text-gray-300 mb-4"></i>
+        <h2 class="text-2xl font-bold text-gray-700">Список сравнения пуст</h2>
+        <p class="text-gray-500 mt-2 mb-6">Добавьте товары, чтобы сравнить их характеристики.</p>
+        <a href="{% url 'store:product_list' %}" class="btn-primary px-8 py-3 font-medium">Перейти в каталог</a>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

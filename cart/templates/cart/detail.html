@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Ваша корзина{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4"
+     x-data="cartPage()">
+     
+    {{ cart_json_data|json_script:"cart-initial-data" }}
+
+    <div class="flex items-baseline mb-6">
+        <h1 class="text-4xl font-bold" style="color: var(--lavender-deep);">Корзина</h1>
+        <sup class="text-2xl font-bold text-gray-500 ml-1" x-text="items.length"></sup>
+    </div>
+    
+    <template x-if="items.length > 0">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            <!-- Левая колонка: товары -->
+            <div class="lg:col-span-2 space-y-4">
+                <!-- Панель управления -->
+                <div class="bg-white rounded-2xl shadow-lg p-4 flex justify-between items-center">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="select-all" x-model="selectAll" @change="toggleAll" class="h-5 w-5 rounded border-gray-300 text-lavender-dark focus:ring-lavender-dark">
+                        <label for="select-all" class="ml-3 text-gray-700">Выбрать все</label>
+                    </div>
+                    <button @click="removeSelectedItems" 
+                            :disabled="selectedItems.length === 0" 
+                            class="text-sm text-gray-500 hover:text-red-500 disabled:text-gray-300 disabled:cursor-not-allowed transition-colors">
+                        Удалить выбранные
+                    </button>
+                </div>
+
+                <!-- Список товаров -->
+                <div class="bg-white rounded-2xl shadow-lg">
+                    <h2 class="text-xl font-bold p-6 border-b">Доступны для заказа</h2>
+                    <div class="divide-y">
+                        <template x-for="item in items" :key="item.product.id">
+                            <div class="p-6 flex items-start gap-4">
+                                <input type="checkbox" :value="item.product.id" x-model="selectedItems" @change="updateSelectAllState" class="mt-1 h-5 w-5 rounded border-gray-300 text-lavender-dark focus:ring-lavender-dark">
+                                <a :href="item.product.url" class="flex-shrink-0">
+                                    <img :src="item.product.image_url" :alt="item.product.name" class="w-24 h-24 object-cover rounded-lg">
+                                </a>
+                                <div class="flex-grow">
+                                    <a :href="item.product.url" class="font-semibold hover:text-lavender-dark" x-text="item.product.name"></a>
+                                    <p class="text-sm text-secondary" x-text="item.product.category_name"></p>
+                                    <div class="flex items-center gap-4 mt-2">
+                                        <!-- ОБНОВЛЕННАЯ КНОПКА СЕРДЦА -->
+                                        <button @click.prevent="toggleWishlist(item.product.id, $el)" 
+                                                class="heart-button"
+                                                :class="{ 'is-favorite': isFavorite(item.product.id) }"
+                                                aria-label="Добавить в избранное">
+                                            <i class="fa-solid fa-heart"></i>
+                                            <i class="fa-solid fa-heart-crack"></i>
+                                        </button>
+                                        <button @click.prevent="removeItem(item.product.id)" class="text-secondary hover:text-red-500"><i class="far fa-trash-alt"></i></button>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col items-end gap-2">
+                                    <div class="flex items-center border border-gray-300 rounded-lg">
+                                        <button @click="updateQuantity(item.product.id, item.quantity - 1)" :disabled="item.quantity <= 1" class="px-3 py-1.5 text-lg text-gray-500 disabled:text-gray-300 hover:text-lavender-dark">-</button>
+                                        <input type="text" :value="item.quantity" class="w-10 text-center border-none focus:ring-0 font-medium" readonly>
+                                        <button @click="updateQuantity(item.product.id, item.quantity + 1)" :disabled="item.quantity >= item.product.stock" class="px-3 py-1.5 text-lg text-gray-500 disabled:text-gray-300 hover:text-lavender-dark">+</button>
+                                    </div>
+                                    <p class="font-bold text-lg" x-text="formatPrice(item.total_price)"></p>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Правая колонка: Итого -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-2xl shadow-lg p-6 sticky top-28">
+                    <h2 class="text-2xl font-bold mb-4">Итого</h2>
+                    <div class="space-y-2 border-b pb-4 mb-4">
+                        <div class="flex justify-between text-lg">
+                            <span>Товары (<span x-text="totalQuantity"></span>)</span>
+                            <span x-text="formatPrice(subtotal)"></span>
+                        </div>
+                        <template x-if="discount > 0 && promoCode">
+                            <div class="flex justify-between text-lg text-green-600">
+                                <span>Скидка (<span x-text="promoCode.discount_percent"></span>%)</span>
+                                <span x-text="'- ' + formatPrice(discount)"></span>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="pt-4 flex justify-between font-bold text-xl">
+                        <span>К оплате</span>
+                        <span x-text="formatPrice(total)"></span>
+                    </div>
+                    <a href="{% url 'orders:order_create' %}" class="block w-full text-center btn-primary py-3 font-medium mt-6">
+                        Перейти к оформлению
+                    </a>
+                    <div class="mt-6 border-t pt-6">
+                        {% if cart.promo_code %}
+                            <p class="text-center text-sm text-secondary mb-2">Применен промокод: <strong class="text-gray-800">{{ cart.promo_code.code }}</strong></p>
+                            <form action="{% url 'cart:promo_code_remove' %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="w-full text-center text-sm text-red-500 hover:underline">Удалить промокод</button>
+                            </form>
+                        {% else %}
+                            <h3 class="font-semibold text-center mb-3">Есть промокод?</h3>
+                            <form action="{% url 'cart:promo_code_apply' %}" method="post" class="flex">
+                                {% csrf_token %}
+                                {{ promo_form.code }}
+                                <button type="submit" class="btn-primary !rounded-l-none !rounded-r-lg px-4 ml-[-1px]">Применить</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    
+    <template x-if="items.length === 0">
+        <div class="text-center py-24">
+            <i class="fas fa-shopping-cart text-6xl text-gray-300 mb-4"></i>
+            <h2 class="text-2xl font-bold text-gray-700">Ваша корзина пуста</h2>
+            <p class="text-gray-500 mt-2 mb-6">Самое время добавить в неё что-нибудь прекрасное.</p>
+            <a href="{% url 'store:product_list' %}" class="btn-primary px-8 py-3 font-medium">Перейти в каталог</a>
+        </div>
+    </template>
+</div>
+
+<script>
+    function cartPage() {
+        return {
+            items: [],
+            totalQuantity: 0,
+            subtotal: 0,
+            discount: 0,
+            total: 0,
+            promoCode: null,
+            selectedItems: [],
+            selectAll: false,
+            wishlistIds: [],
+
+            init() {
+                const initialData = JSON.parse(document.getElementById('cart-initial-data').textContent);
+                this.items = initialData.items.map(item => ({
+                    ...item,
+                    total_price: parseFloat(item.total_price),
+                    price: parseFloat(item.price)
+                }));
+                this.wishlistIds = initialData.wishlist_ids;
+                this.recalculateTotals(initialData);
+            },
+            
+            recalculateTotals(data) {
+                this.totalQuantity = data.total_quantity;
+                this.subtotal = parseFloat(data.subtotal);
+                this.discount = parseFloat(data.discount);
+                this.total = parseFloat(data.total);
+                this.promoCode = data.promo_code;
+            },
+
+            isFavorite(productId) {
+                return this.wishlistIds.includes(productId);
+            },
+            
+            formatPrice(price) {
+                return price.toLocaleString('ru-RU', { style: 'currency', currency: 'RUB', minimumFractionDigits: 0, maximumFractionDigits: 0 });
+            },
+
+            toggleAll() {
+                this.selectedItems = this.selectAll ? this.items.map(item => item.product.id) : [];
+            },
+
+            updateSelectAllState() {
+                this.selectAll = this.selectedItems.length === this.items.length;
+            },
+            
+            async makeRequest(url, method = 'POST', body = null) {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                try {
+                    const response = await fetch(url, {
+                        method: method,
+                        headers: {
+                            'X-CSRFToken': csrfToken,
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Content-Type': 'application/json'
+                        },
+                        body: body ? JSON.stringify(body) : null
+                    });
+                    const data = await response.json();
+                    if (!response.ok) {
+                        throw new Error(data.error || `Ошибка сервера: ${response.status}`);
+                    }
+                    return data;
+                } catch (error) {
+                    console.error('Ошибка запроса:', error);
+                    window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: error.message, type: 'error' } }));
+                    return null;
+                }
+            },
+            
+            async toggleWishlist(productId, buttonElement) {
+                if (buttonElement.classList.contains('is-breaking')) return;
+
+                const isCurrentlyFavorite = this.isFavorite(productId);
+
+                if (isCurrentlyFavorite) {
+                    buttonElement.classList.add('is-breaking');
+                    setTimeout(() => {
+                        buttonElement.classList.remove('is-breaking');
+                    }, 600);
+                }
+
+                const data = await this.makeRequest(`/api/action/wishlist/toggle/`, 'POST', { product_id: productId });
+                
+                if (data && data.status === 'ok') {
+                    // Обновляем наш локальный массив ID
+                    if (data.action === 'added') {
+                        this.wishlistIds.push(productId);
+                    } else {
+                        this.wishlistIds = this.wishlistIds.filter(id => id !== productId);
+                    }
+
+                    // Обновляем счетчик в шапке
+                    window.dispatchEvent(new CustomEvent('update-wishlist-count', { detail: { count: data.wishlist_count }}));
+                    window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: data.message, type: 'success' } }));
+                }
+            },
+
+            async updateQuantity(productId, quantity) {
+                const data = await this.makeRequest(`/cart/update/${productId}/`, 'POST', { quantity });
+                if (data && data.status === 'ok') {
+                    const item = this.items.find(i => i.product.id === productId);
+                    if (item) {
+                        item.quantity = quantity;
+                        item.total_price = data.item_total_price;
+                    }
+                    this.recalculateTotals({
+                        total_quantity: data.cart_total_quantity,
+                        subtotal: data.cart_total_price,
+                        discount: data.cart_discount,
+                        total: data.cart_total_price_after_discount,
+                        promo_code: this.promoCode
+                    });
+                }
+            },
+
+            async removeItem(productId) {
+                const data = await this.makeRequest(`/cart/remove/${productId}/`);
+                if (data && data.status === 'ok') {
+                    this.items = this.items.filter(item => item.product.id !== productId);
+                    this.selectedItems = this.selectedItems.filter(id => id !== productId);
+                    this.updateSelectAllState();
+                    this.recalculateTotals({
+                        total_quantity: 0,
+                        subtotal: data.cart_total_price,
+                        discount: data.cart_discount,
+                        total: data.cart_total_price_after_discount,
+                        promo_code: this.promoCode
+                    });
+                    this.totalQuantity = this.items.reduce((sum, item) => sum + item.quantity, 0);
+
+                    window.dispatchEvent(new CustomEvent('update-cart-count', { detail: { count: data.cart_unique_items_count } }));
+                    window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: `Товар "${data.product_name}" удален.`, type: 'success' } }));
+                }
+            },
+
+            async removeSelectedItems() {
+                if (this.selectedItems.length === 0 || !confirm(`Вы уверены, что хотите удалить ${this.selectedItems.length} товар(а)?`)) {
+                    return;
+                }
+                const itemsToRemove = [...this.selectedItems];
+                for (const productId of itemsToRemove) {
+                    await this.removeItem(productId);
+                }
+            }
+        }
+    }
+</script>
+{% endblock %}

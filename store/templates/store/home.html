@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load store_tags %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4">
+    {% if slides %}
+    <section 
+        x-data="{ 
+            activeSlide: 1, 
+            autoplay: null,
+            init() { 
+                this.startAutoplay();
+            },
+            startAutoplay() {
+                this.autoplay = setInterval(() => { this.next(); }, 10000);
+            },
+            stopAutoplay() {
+                clearInterval(this.autoplay);
+            },
+            next() { 
+                this.activeSlide = (this.activeSlide === {{ slides|length }}) ? 1 : this.activeSlide + 1;
+            },
+            prev() {
+                this.activeSlide = (this.activeSlide === 1) ? {{ slides|length }} : this.activeSlide - 1;
+            },
+            goToSlide(slideIndex) {
+                this.activeSlide = slideIndex;
+            }
+        }"
+        @mouseenter="stopAutoplay"
+        @mouseleave="startAutoplay"
+        class="mb-16 relative slider-container"
+    >
+
+        <div class="relative w-full h-full overflow-hidden">
+            {% for slide in slides %}
+            <div 
+                x-show="activeSlide === {{ forloop.counter }}" 
+                x-transition:enter="transition ease-in-out duration-700"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                x-transition:leave="transition ease-in-out duration-700"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+                class="absolute inset-0 w-full h-full"
+            >
+                <a href="{{ slide.link_url }}" class="block w-full h-full">
+                    {% if slide.image %}
+                        <img src="{{ slide.image.url }}" alt="{{ slide.alt_text }}" class="w-full h-full object-cover">
+                    {% endif %}
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <button @click="prev()" class="slider-arrow left-0"><i class="fas fa-chevron-left"></i></button>
+        <button @click="next()" class="slider-arrow right-0"><i class="fas fa-chevron-right"></i></button>
+
+        <div class="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex space-x-3">
+            {% for slide in slides %}
+            <button @click="goToSlide({{ forloop.counter }})" :class="{ 'bg-white': activeSlide === {{ forloop.counter }}, 'bg-white/50': activeSlide !== {{ forloop.counter }} }" class="slider-dot"></button>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+
+    {% if featured_categories %}
+    <section class="mb-16">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {% for category in featured_categories %}
+            <a href="{{ category.get_absolute_url }}" class="featured-category-card" {% if category.image %}style="background-image: url('{{ category.image.url }}');"{% endif %}>
+                <div class="featured-category-overlay"></div>
+                <h3 class="featured-category-title">{{ category.name }}</h3>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+    
+
+    <section class="mb-16">
+        <div class="flex justify-between items-center mb-10">
+            <h2 class="text-4xl font-bold text-light-theme-text" style="color: var(--lavender-deep);">Лидеры продаж</h2>
+            <a href="{% url 'store:product_list' %}" class="font-semibold hover:underline" style="color: var(--lavender-dark);">Весь каталог →</a>
+        </div>
+        {% get_bestsellers 4 %}
+    </section>
+
+
+    {% if features %}
+    <section class="mb-16">
+        <h2 class="text-4xl font-bold text-center mb-10 text-light-theme-text" style="color: var(--lavender-deep);">Почему стоит выбрать нас?</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {% for feature in features %}
+            <div class="text-center p-6 bg-light-theme-card-bg rounded-2xl shadow-sm">
+                {% if feature.image %}
+                    <img src="{{ feature.image.url }}" alt="{{ feature.title }}" class="h-24 mx-auto mb-4">
+                {% endif %}
+                <h3 class="text-xl font-bold mb-2">{{ feature.title }}</h3>
+                <p class="text-sm text-light-theme-text-secondary">{{ feature.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- НОВЫЙ БЛОК: НЕДАВНО ПРОСМОТРЕННЫЕ ТОВАРЫ -->
+    {% get_recently_viewed request %}
+
+    {% if latest_articles %}
+    <section class="mb-16">
+        <div class="flex justify-between items-center mb-10">
+            <h2 class="text-4xl font-bold text-light-theme-text" style="color: var(--lavender-deep);">Полезные статьи</h2>
+            <a href="{% url 'blog:article_list' %}" class="font-semibold hover:underline" style="color: var(--lavender-dark);">Все статьи →</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {% for article in latest_articles %}
+            <div class="bg-light-theme-card-bg rounded-2xl overflow-hidden group border border-transparent hover:border-lavender-medium transition-all duration-300 hover:shadow-lg">
+                <a href="{{ article.get_absolute_url }}" class="block overflow-hidden product-image-container">
+                    {% if article.image %}
+                        <img src="{{ article.image.url }}" alt="{{ article.title }}" class="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-105">
+                    {% else %}
+                        <div class="w-full h-56 bg-gray-200 flex items-center justify-center">
+                            <i class="fas fa-image text-4xl text-gray-400"></i>
+                        </div>
+                    {% endif %}
+                </a>
+                <div class="p-6">
+                    <p class="text-sm text-light-theme-text-secondary mb-2">{{ article.created_at|date:"d E Y" }} г.</p>
+                    <h3 class="text-xl font-bold mb-3" style="color: var(--lavender-deep);">
+                        <a href="{{ article.get_absolute_url }}" class="hover:text-lavender-dark transition-colors">{{ article.title }}</a>
+                    </h3>
+                    <p class="text-light-theme-text-secondary mb-4 text-sm leading-relaxed">{{ article.content|truncatewords:20 }}</p>
+                    <a href="{{ article.get_absolute_url }}" class="font-bold transition-colors" style="color: var(--lavender-dark);">Читать далее →</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <section class="bg-light-theme-card-bg rounded-3xl p-8 lg:p-16 text-center">
+        <h3 class="text-3xl font-bold mb-2 text-light-theme-text" style="color: var(--lavender-deep);">Подпишитесь на рассылку</h3>
+        <p class="text-light-theme-text-secondary max-w-md mx-auto mb-6">Получайте эксклюзивные предложения, новости о распродажах и полезные советы по обустройству дома прямо на вашу почту.</p>
+        <form class="max-w-md mx-auto flex" method="POST" action="{% url 'store:subscribe' %}">
+            {% csrf_token %}
+            <input type="email" name="email" required placeholder="Ваш email" class="w-full px-4 py-2.5 rounded-l-full text-gray-800 focus:outline-none border border-gray-300 focus:border-lavender-dark">
+            <button type="submit" class="btn-primary px-6 font-medium rounded-r-full">Подписаться</button>
+        </form>
+        <p class="text-xs text-light-theme-text-secondary mt-4">Мы уважаем вашу конфиденциальность. Отписаться можно в любой момент.</p>
+    </section>
+</div>
+{% endblock %}

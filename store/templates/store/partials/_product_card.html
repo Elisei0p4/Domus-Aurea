@@ -1,0 +1,90 @@
+{% load static %}
+{% load imagekit %}
+
+<div class="bg-light-theme-card-bg rounded-xl shadow-sm border border-light-theme-border group flex flex-col transition-all duration-300 hover:shadow-lg hover:border-gray-300">
+    <div class="relative overflow-hidden rounded-t-xl">
+        <a href="{{ product.get_absolute_url }}" class="block aspect-square product-image-container">
+            {% if product.image %}
+                <picture>
+                    <source media="(max-width: 640px)" srcset="{{ product.image_card_small.url }}">
+                    <source media="(min-width: 641px)" srcset="{{ product.image_card_large.url }}">
+                    <img src="{{ product.image_card_large.url }}" 
+                         alt="{{ product.name }}"
+                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                         loading="lazy">
+                </picture>
+            {% else %}
+                <div class="w-full h-full bg-gray-100 flex items-center justify-center p-4">
+                    <img src="{% static 'images/placeholder.png' %}" alt="{{ product.name }}" class="w-full h-full object-contain">
+                </div>
+            {% endif %}
+        </a>
+        
+        <div class="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <button 
+                @click.prevent="handleUserAction($el, 'wishlist', 'toggle')"
+                data-product-id="{{ product.id }}"
+                class="action-btn"
+                aria-label="Добавить в избранное">
+                <i class="fa-solid fa-spinner-third fa-spin icon-loading"></i>
+                <i class="icon-default {% if product.id in wishlist.get_product_ids %}fas fa-heart text-sale-pink{% else %}far fa-heart{% endif %}"></i>
+            </button>
+            <button 
+                @click.prevent="handleUserAction($el, 'comparison', 'toggle')"
+                data-product-id="{{ product.id }}"
+                class="action-btn"
+                aria-label="Добавить к сравнению">
+                <i class="fa-solid fa-spinner-third fa-spin icon-loading"></i>
+                <i class="icon-default fas fa-balance-scale {% if product.id in comparison.get_product_ids %}text-lavender-dark{% endif %}"></i>
+            </button>
+            <button @click.prevent="$store.modal.open({{ product.id }})" class="action-btn" aria-label="Быстрый просмотр">
+                <i class="far fa-eye"></i>
+            </button>
+        </div>
+
+        {% if product.discount > 0 %}
+            <div class="absolute top-3 left-3 discount-badge-v2">-{{ product.discount }}%</div>
+        {% endif %}
+    </div>
+    
+    <div class="p-4 flex flex-col flex-grow">
+        <a href="{{ product.get_absolute_url }}" class="flex-grow">
+            <h3 class="font-bold text-base text-light-theme-text leading-tight mb-2 group-hover:text-lavender-dark transition-colors">
+                {{ product.name }}
+            </h3>
+            <p class="text-xs text-light-theme-text-secondary mb-3">{{ product.category.name }}</p>
+        </a>
+
+        <div class="mt-auto pt-3 border-t border-light-theme-border">
+            <div class="flex justify-between items-baseline mb-3">
+                {% if product.old_price %}
+                    <div class="flex items-baseline gap-2">
+                        <p class="text-xl font-bold text-sale-pink">{{ product.final_price|floatformat:"0" }}&nbsp;₽</p>
+                        <p class="text-sm text-light-theme-text-secondary line-through">{{ product.old_price|floatformat:"0" }}&nbsp;₽</p>
+                    </div>
+                {% else %}
+                    <p class="text-xl font-bold text-light-theme-text">{{ product.final_price|floatformat:"0" }}&nbsp;₽</p>
+                {% endif %}
+
+                {% if product.available and product.stock > 0 %}
+                    <div class="text-xs font-medium text-green-600">
+                        <i class="fas fa-check-circle"></i> В наличии
+                    </div>
+                {% else %}
+                    <div class="text-xs font-medium text-red-600">
+                        <i class="fas fa-times-circle"></i> Нет в наличии
+                    </div>
+                {% endif %}
+            </div>
+
+            <button
+                @click.prevent="handleUserAction($el, 'cart', 'add')"
+                data-product-id="{{ product.id }}"
+                class="w-full btn-primary !rounded-lg py-2.5 text-sm font-semibold relative"
+                {% if not product.available or product.stock == 0 %}disabled{% endif %}>
+                <span class="btn-text">В корзину</span>
+                <span class="btn-loader"><i class="fas fa-spinner fa-spin"></i></span>
+            </button>
+        </div>
+    </div>
+</div>

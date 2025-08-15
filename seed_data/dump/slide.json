@@ -1,0 +1,57 @@
+[
+{
+  "model": "store.slide",
+  "pk": 2,
+  "fields": {
+    "alt_text": "Предложение",
+    "image": "slides/Предложение_1.webp",
+    "link_url": "/shop",
+    "is_active": true,
+    "display_order": 0
+  }
+},
+{
+  "model": "store.slide",
+  "pk": 3,
+  "fields": {
+    "alt_text": "Предложение",
+    "image": "slides/Предложение_2.webp",
+    "link_url": "/shop/",
+    "is_active": true,
+    "display_order": 4
+  }
+},
+{
+  "model": "store.slide",
+  "pk": 4,
+  "fields": {
+    "alt_text": "Предложение",
+    "image": "slides/Предложение_3.webp",
+    "link_url": "/shop/",
+    "is_active": true,
+    "display_order": 1
+  }
+},
+{
+  "model": "store.slide",
+  "pk": 5,
+  "fields": {
+    "alt_text": "Предложение",
+    "image": "slides/Предложение_4.webp",
+    "link_url": "/shop/",
+    "is_active": true,
+    "display_order": 2
+  }
+},
+{
+  "model": "store.slide",
+  "pk": 6,
+  "fields": {
+    "alt_text": "Предложение",
+    "image": "slides/Предложение_6.webp",
+    "link_url": "/shop/",
+    "is_active": true,
+    "display_order": 4
+  }
+}
+]

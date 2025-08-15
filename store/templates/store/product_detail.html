@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load imagekit %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4">
+    <!-- Основной блок товара -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+        <!-- Левая колонка: Галерея и 3D модель -->
+        <div x-data="productGallery('{{ product.get_main_image_url }}')">
+            <!-- Основное изображение -->
+            <div class="relative w-full aspect-square bg-gray-100 rounded-xl overflow-hidden mb-3 shadow-lg transition-all duration-300">
+                <img :src="mainImage" :key="mainImage" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" alt="{{ product.name }}" class="w-full h-full object-cover">
+
+                {% if product.discount > 0 %}
+                    <div class="product-badge-discount">-{{ product.discount }}%</div>
+                {% endif %}
+            </div>
+            <!-- Миниатюры -->
+            <div class="grid grid-cols-5 gap-3">
+                {% if product.image %}
+                <button @click="changeImage('{{ product.image.url }}')" class="aspect-square rounded-lg overflow-hidden border-2 transition" :class="mainImage === '{{ product.image.url }}' ? 'border-lavender-dark' : 'border-transparent hover:border-lavender-medium'">
+                    {% thumbnail '100x100' product.image -- class="w-full h-full object-cover" alt="Основное изображение" %}
+                </button>
+                {% endif %}
+                {% for img in product.images.all %}
+                <button @click="changeImage('{{ img.image.url }}')" class="aspect-square rounded-lg overflow-hidden border-2 transition" :class="mainImage === '{{ img.image.url }}' ? 'border-lavender-dark' : 'border-transparent hover:border-lavender-medium'">
+                    <img src="{{ img.image_thumbnail.url }}" alt="{{ img.alt_text|default:product.name }}" class="w-full h-full object-cover">
+                </button>
+                {% endfor %}
+            </div>
+            
+            <!-- 3D Viewer -->
+            {% if product.model_3d %}
+            <div class="mt-8">
+                <h3 class="text-xl font-bold mb-4 text-center text-lavender-deep">Осмотрите со всех сторон</h3>
+                <model-viewer 
+                    src="{{ product.model_3d.url }}" 
+                    alt="3D модель {{ product.name }}"
+                    ar ar-modes="webxr scene-viewer quick-look" 
+                    camera-controls 
+                    enable-pan
+                    auto-rotate
+                    class="w-full h-96 rounded-xl bg-gray-100">
+                </model-viewer>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Правая колонка: Информация -->
+        <div>
+            <p class="font-bold text-lg text-secondary">{{ product.brand|default:"Domus Aurea" }}</p>
+            <h1 class="text-3xl lg:text-4xl font-bold my-2 text-text-primary">{{ product.name }}</h1>
+            
+            <div class="flex items-center space-x-4 text-sm text-secondary mb-5">
+                <span>Арт. <span class="text-gray-500">{{ product.sku|default:"N/A" }}</span></span>
+                {% if product.review_count > 0 %}
+                <a href="#reviews-section" @click.prevent="document.getElementById('reviews-section').scrollIntoView({ behavior: 'smooth' });" class="flex items-center space-x-1 hover:text-lavender-dark">
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <span class="font-bold">{{ product.average_rating|floatformat:1 }}</span>
+                    <span>({{ product.review_count }} {{ product.review_count|pluralize:"отзыв,отзыва,отзывов" }})</span>
+                </a>
+                {% endif %}
+            </div>
+
+            <div class="mb-5">
+                <div class="flex items-center gap-4">
+                    <p class="text-4xl font-bold text-text-primary">{{ product.final_price|floatformat:"0" }} ₽</p>
+                    {% if product.old_price %}
+                        <p class="text-2xl text-gray-400 line-through">{{ product.old_price|floatformat:"0" }} ₽</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="mb-5 space-y-3">
+                <button @click="handleUserAction($el, 'cart', 'add')" data-product-id="{{ product.id }}" class="w-full h-14 text-lg btn-secondary font-bold flex items-center justify-center ripple-btn" 
+                        {% if not product.available or product.stock == 0 %}disabled{% endif %}>
+                    <i class="fas fa-shopping-cart mr-3"></i>Добавить в корзину
+                </button>
+                 <a href="{% url 'store:buy_now' product.id %}" class="w-full h-14 text-lg btn-primary font-bold flex items-center justify-center ripple-btn"
+                    {% if not product.available or product.stock == 0 %}
+                       style="pointer-events: none; background-color: #9ca3af;" 
+                       aria-disabled="true"
+                   {% endif %}>
+                    Купить в 1 клик
+                </a>
+            </div>
+            
+            {% if product.characteristics %}
+            <div class="mt-5 bg-white p-5 rounded-lg shadow-sm">
+                <h3 class="font-bold mb-3">Основные характеристики</h3>
+                <dl class="space-y-2 text-sm">
+                    {% for group_name, items_dict in product.characteristics.items|slice:":1" %}
+                        {% for key, value in items_dict.items|slice:":3" %}
+                            <div class="flex justify-between items-center">
+                                <dt class="text-secondary">{{ key }}</dt>
+                                <dd class="font-medium text-text-primary text-right">{{ value }}</dd>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </dl>
+                <button @click="document.getElementById('chars-section').scrollIntoView({ behavior: 'smooth' }); tab = 'chars';" class="text-lavender-dark font-semibold mt-3 text-sm hover:underline">Показать все</button>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div x-data="{ tab: 'chars' }" class="mt-16">
+        <div class="border-b border-gray-200 mb-8" id="chars-section">
+            <nav class="info-tabs" aria-label="Tabs">
+                <button @click="tab = 'chars'" :class="tab === 'chars' ? 'active' : ''" class="info-tab">Характеристики</button>
+                <button @click="tab = 'reviews'" :class="tab === 'reviews' ? 'active' : ''" class="info-tab" id="reviews-section">Отзывы ({{ product.review_count }})</button>
+            </nav>
+        </div>
+        <div x-show="tab === 'chars'" x-transition class="max-w-5xl mx-auto">
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+                {% for group, items in product.characteristics.items %}
+                <div class="char-section">
+                    <h3 class="char-section-title">{{ group }}</h3>
+                    <dl>
+                        {% for key, value in items.items %}
+                        <div class="char-item">
+                            <dt class="char-key">{{ key }}</dt>
+                            <dd class="char-value">{{ value }}</dd>
+                        </div>
+                        {% endfor %}
+                    </dl>
+                </div>
+                {% empty %}
+                <p class="md:col-span-2 text-center text-secondary py-8">Характеристики для этого товара пока не добавлены.</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div x-show="tab === 'reviews'" x-transition class="max-w-5xl mx-auto">
+            <div class="space-y-6">
+                {% for review in reviews %}
+                <div class="review-item">
+                    <div class="review-author-avatar"><i class="fas fa-user"></i></div>
+                    <div class="w-full">
+                        <div class="flex items-center justify-between">
+                            <div><p class="font-bold">{{ review.author_name }}</p></div>
+                            <span class="text-sm text-secondary">{{ review.created_at|date:"d E Y" }}</span>
+                        </div>
+                        <div class="flex items-center my-2">{% for i in "12345" %}<i class="fas fa-star text-sm {% if i|add:0 <= review.rating %}text-yellow-400{% else %}text-gray-300{% endif %}"></i>{% endfor %}</div>
+                        <p class="text-secondary">{{ review.text|linebreaks }}</p>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-center text-secondary py-8">Отзывов на этот товар пока нет. Будьте первым!</p>
+                {% endfor %}
+            </div>
+            <div class="mt-10 border-t pt-8">
+                <h3 class="text-2xl font-bold mb-4">Оставить отзыв</h3>
+                {% if user.is_authenticated %}
+                    {% if user_has_reviewed %}
+                        <p class="text-secondary">Вы уже оставляли отзыв на этот товар.</p>
+                    {% else %}
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="submit_review" value="1">
+                            <div class="mb-4"><label for="{{ review_form.rating.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Ваша оценка</label>{{ review_form.rating }}</div>
+                            <div class="mb-4"><label for="{{ review_form.text.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Текст отзыва</label>{{ review_form.text }}</div>
+                            <button type="submit" class="btn-primary px-6 py-2">Отправить отзыв</button>
+                        </form>
+                    {% endif %}
+                {% else %}
+                    <p class="text-secondary">Пожалуйста, <a href="{% url 'users:login' %}?next={{ request.path }}" class="text-lavender-dark underline">войдите в аккаунт</a>, чтобы оставить отзыв.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Похожие товары -->
+    {% if similar_products %}
+    <section class="mt-16">
+        <h2 class="text-3xl font-bold mb-6 text-center" style="color: var(--lavender-deep);">Похожие товары</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {% for product in similar_products %}
+                {% include 'store/partials/_product_card.html' with product=product %}
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+</div>
+{% endblock %}

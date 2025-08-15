@@ -1,0 +1,14 @@
+{% load static %}
+
+{% if recently_viewed_products %}
+<section class="mb-16">
+    <div class="flex justify-between items-center mb-10">
+        <h2 class="text-4xl font-bold" style="color: var(--lavender-deep);">Вы недавно смотрели</h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+        {% for product in recently_viewed_products %}
+            {% include 'store/partials/_product_card.html' with product=product %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}

@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Мой аккаунт{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold mb-8" style="color: var(--lavender-deep);">Мой аккаунт</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Левая колонка с навигацией -->
+        <div class="md:col-span-1">
+            <div class="bg-white p-6 rounded-2xl shadow-lg">
+                <div class="flex items-center mb-4">
+                    <div class="w-16 h-16 rounded-full bg-lavender-medium flex items-center justify-center mr-4">
+                        <i class="fas fa-user text-3xl text-lavender-deep"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-lg">Здравствуйте, {{ user.get_full_name|default:user.username }}!</h2>
+                        <p class="text-sm text-secondary">{{ user.email }}</p>
+                    </div>
+                </div>
+                <nav class="space-y-2">
+                    <a href="{% url 'store:account' %}" class="flex items-center px-4 py-2 rounded-lg bg-lavender-light font-semibold" style="color: var(--lavender-deep);">
+                        <i class="fas fa-tachometer-alt w-5 mr-3"></i>Панель управления
+                    </a>
+                    <a href="{% url 'orders:order_list' %}" class="flex items-center px-4 py-2 rounded-lg text-secondary hover:bg-lavender-light hover:text-lavender-deep">
+                        <i class="fas fa-box w-5 mr-3"></i>История заказов
+                    </a>
+                    <a href="{% url 'users:profile_edit' %}" class="flex items-center px-4 py-2 rounded-lg text-secondary hover:bg-lavender-light hover:text-lavender-deep">
+                        <i class="fas fa-user-edit w-5 mr-3"></i>Профиль
+                    </a>
+                    <a href="#" class="flex items-center px-4 py-2 rounded-lg text-secondary hover:bg-lavender-light hover:text-lavender-deep">
+                        <i class="fas fa-key w-5 mr-3"></i>Сменить пароль
+                    </a>
+                    <form action="{% url 'users:logout' %}" method="post" class="w-full">
+                         {% csrf_token %}
+                         <button type="submit" class="w-full flex items-center px-4 py-2 rounded-lg text-red-500 hover:bg-red-50 text-left">
+                            <i class="fas fa-sign-out-alt w-5 mr-3"></i>Выйти
+                         </button>
+                    </form>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Правая колонка с контентом -->
+        <div class="md:col-span-2">
+            <div class="bg-white p-8 rounded-2xl shadow-lg">
+                <h3 class="text-2xl font-bold mb-4" style="color: var(--lavender-deep);">Панель управления</h3>
+                <p class="text-secondary mb-6">Отсюда вы можете просматривать недавние заказы, управлять адресами доставки и изменять пароль.</p>
+                <div class="border-t pt-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="font-bold text-lg">Последние заказы</h4>
+                        <a href="{% url 'orders:order_list' %}" class="text-sm font-semibold text-lavender-dark hover:underline">Все заказы</a>
+                    </div>
+                    
+                    {% if orders %}
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">Заказ</th>
+                                    <th scope="col" class="px-6 py-3">Дата</th>
+                                    <th scope="col" class="px-6 py-3">Статус</th>
+                                    <th scope="col" class="px-6 py-3">Сумма</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders %}
+                                <tr class="bg-white border-b hover:bg-gray-50">
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                        <a href="{% url 'orders:order_detail' order.id %}" class="text-lavender-dark hover:underline">#{{ order.id }}</a>
+                                    </th>
+                                    <td class="px-6 py-4">{{ order.created|date:"d.m.Y" }}</td>
+                                    <td class="px-6 py-4">{% if order.paid %}<span class="text-green-600">Оплачен</span>{% else %}<span class="text-yellow-600">Ожидает оплаты</span>{% endif %}</td>
+                                    <td class="px-6 py-4">{{ order.total_cost|floatformat:"0" }} ₽</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                        <p class="text-secondary">У вас пока нет заказов.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+[
+{
+  "model": "store.feature",
+  "pk": 1,
+  "fields": {
+    "title": "Лёгкость",
+    "description": "Легкий обмен\r\nв течение 90 дней",
+    "image": "features/изображение_2025-08-15_211947891.png",
+    "display_order": 0
+  }
+},
+{
+  "model": "store.feature",
+  "pk": 2,
+  "fields": {
+    "title": "гарантия",
+    "description": "Гарантия\r\nдо 30 лет",
+    "image": "features/изображение_2025-08-15_212311019.png",
+    "display_order": 1
+  }
+},
+{
+  "model": "store.feature",
+  "pk": 3,
+  "fields": {
+    "title": "Быстрота",
+    "description": "Доставка\r\nпод ключ",
+    "image": "features/изображение_2025-08-15_212326438.png",
+    "display_order": 2
+  }
+},
+{
+  "model": "store.feature",
+  "pk": 4,
+  "fields": {
+    "title": "Своё",
+    "description": "Своя\r\nлаборатория сна",
+    "image": "features/изображение_2025-08-15_212346823.png",
+    "display_order": 3
+  }
+}
+]

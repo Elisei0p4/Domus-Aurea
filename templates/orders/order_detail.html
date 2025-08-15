@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Заказ #{{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <a href="{% url 'orders:order_list' %}" class="text-lavender-dark hover:underline mb-4 inline-block"><i class="fas fa-arrow-left mr-2"></i>К списку заказов</a>
+    <h1 class="text-4xl font-bold mb-2" style="color: var(--lavender-deep);">Детали заказа #{{ order.id }}</h1>
+    <p class="text-secondary mb-8">Заказ от {{ order.created|date:"d E Y, H:i" }}</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="md:col-span-2 bg-white rounded-2xl shadow-lg p-8">
+            <h2 class="text-2xl font-bold mb-6">Состав заказа</h2>
+            <ul class="space-y-4">
+                {% for item in order.items.all %}
+                <li class="flex justify-between items-center pb-4 border-b last:border-0">
+                    <div class="flex items-center">
+                        {% if item.product.image %}
+                             <img src="{{ item.product.image.url }}" class="w-16 h-16 object-cover rounded-lg mr-4">
+                        {% else %}
+                            <img src="{% static 'images/placeholder.png' %}" class="w-16 h-16 object-contain bg-gray-100 rounded-lg mr-4 p-1">
+                        {% endif %}
+                        <div>
+                            <p class="font-semibold">{{ item.product.name }}</p>
+                            <p class="text-sm text-secondary">{{ item.quantity }} шт. × {{ item.price|floatformat:"0" }} ₽</p>
+                        </div>
+                    </div>
+                    <span class="font-medium text-lg">{{ item.get_cost|floatformat:"0" }} ₽</span>
+                </li>
+                {% endfor %}
+            </ul>
+            <div class="border-t mt-6 pt-4 flex justify-between font-bold text-xl">
+                <span>Итого к оплате</span>
+                <span>{{ order.get_total_cost|floatformat:"0" }} ₽</span>
+            </div>
+        </div>
+        <div class="md:col-span-1 bg-white rounded-2xl shadow-lg p-8">
+            <h2 class="text-2xl font-bold mb-6">Адрес доставки</h2>
+            <div class="space-y-2 text-secondary">
+                <p><strong>{{ order.first_name }} {{ order.last_name }}</strong></p>
+                <p>{{ order.email }}</p>
+                <p>{{ order.address }}</p>
+                <p>{{ order.city }}, {{ order.postal_code }}</p>
+            </div>
+             <div class="mt-6 border-t pt-4">
+                <p class="font-bold">Статус: 
+                    {% if order.paid %}
+                        <span class="text-green-600">Оплачен</span>
+                    {% else %}
+                        <span class="text-yellow-600">Ожидает оплаты</span>
+                    {% endif %}
+                </p>
+             </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

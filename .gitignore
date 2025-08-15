@@ -1,0 +1,68 @@
+# --- Файлы окружения и секреты ---
+.env
+.env.*
+!.env.example
+
+# --- Python & Django ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Файлы виртуального окружения
+venv/
+env/
+.venv/
+
+# Файлы зависимостей, управляемые pip
+pip-wheel-metadata/
+.pip-cache/
+pip-log.txt
+
+# Файлы пакетов Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+celerybeat-schedule
+
+# --- Статика и Медиа (генерируемые при работе) ---
+/staticfiles/
+/media/
+/mediafiles/
+
+# --- IDE & Редакторы кода ---
+.vscode/*
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/extensions.json
+.history/
+
+# PyCharm
+.idea/
+
+# --- Системные файлы ---
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# --- Инструменты тестирования и покрытия ---
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# --- Временные файлы проекта ---
+project_content.txt
+
+# --- Docker ---
+docker-compose.override.yml

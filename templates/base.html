@@ -1,0 +1,458 @@
+{% load static %}
+{% load blog_tags %}
+{% load cache %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Domus Aurea{% endblock %}</title>
+
+    <!-- === СКРИПТ ПРОТИВ МИГАНИЯ ТЕМЫ (FOUC) === -->
+    <script>
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+    
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    
+    <link rel="icon" href="{% static 'images/ICO1.ico' %}" type="image/x-icon">
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+
+    <style>
+        :root {
+            --lavender-deep: #4B3F72;
+            --lavender-dark: #8A63D2;
+            --lavender-medium: #E0E2F5;
+            --lavender-light: #F3F4FB;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+            --border-color: #E5E7EB;
+        }
+        body {
+            padding-top: 0 !important;
+        }
+        .btn-primary { @apply bg-lavender-dark text-white rounded-full transition-transform duration-300 hover:scale-105; }
+        .btn-secondary { @apply bg-lavender-light text-lavender-dark border border-lavender-dark rounded-full transition-all duration-300 hover:bg-lavender-dark hover:text-white; }
+        
+        .footer-list { @apply space-y-2 text-sm; }
+        [x-cloak] { display: none !important; }
+
+        .ripple-btn {
+            position: relative;
+            overflow: hidden;
+            transition: background-color 0.3s;
+        }
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            animation: ripple-effect 0.6s linear;
+        }
+        @keyframes ripple-effect {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        .social-link {
+            color: #d1d5db;
+            transition: all 0.2s ease-in-out;
+        }
+        .social-link:hover {
+            transform: scale(1.2);
+        }
+        .social-link-fb:hover { color: #1877F2; }
+        .social-link-pt:hover { color: #E60023; }
+        .social-link-yt:hover { color: #FF0000; }
+        .social-link-ig:hover i {
+            background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .bg-lavender-deep {
+            background-color: var(--lavender-deep);
+        }
+
+    </style>
+</head>
+<body x-data="themeSwitcher()" class="antialiased flex flex-col min-h-screen bg-light-theme-bg text-light-theme-text transition-colors duration-500">
+
+    <!-- GIF АНИМАЦИЯ ДЛЯ ТЕМНОЙ ТЕМЫ (теперь это фон) -->
+    <div class="fixed inset-0 -z-10 pointer-events-none transition-opacity duration-1000"
+         :class="isDarkMode ? 'opacity-100' : 'opacity-0'"
+         style="background-image: url({% static 'images/NightTheme.gif' %}); background-size: cover; background-position: center;">
+    </div>
+
+    <div x-data="pageSetup()">
+        <!-- БАННЕР СПЕЦПРЕДЛОЖЕНИЯ -->
+        {% if special_offer %}
+        <div 
+            x-show="bannerOpen"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            class="w-full z-[60] bg-white"
+            style="background-image: url('{{ special_offer.image.url }}'); background-size: cover; background-position: center;"
+            x-cloak
+        >
+            <div class="container mx-auto relative h-14 flex items-center justify-center text-white font-bold">
+                {% if special_offer.link_url %}
+                    <a href="{{ special_offer.link_url }}" target="_blank" rel="noopener noreferrer" class="w-full h-full flex items-center justify-center">
+                        <span class="text-sm md:text-base">{{ special_offer.name }}</span>
+                    </a>
+                {% else %}
+                    <div class="w-full h-full flex items-center justify-center">
+                        <span class="text-sm md:text-base">{{ special_offer.name }}</span>
+                    </div>
+                {% endif %}
+
+                <button @click.prevent="closeBanner()" class="absolute top-1/2 -translate-y-1/2 right-4 text-white hover:text-gray-200 transition-colors p-2 z-10">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+        </div>
+        {% endif %}
+
+        <div x-data="searchComponent()" @keydown.escape.window="closeSearch()" class="flex flex-col flex-grow">
+            <!-- ХЕДЕР -->
+            <header class="bg-light-theme-header text-light-theme-text backdrop-blur-sm border-b sticky top-0 z-50 border-light-theme-border transition-colors duration-500">
+                <div class="container mx-auto px-4">
+                    <div class="flex items-center justify-between h-20">
+                        <!-- Левый блок: Логотип -->
+                        <div class="flex-shrink-0">
+                            <a href="{% url 'store:home' %}" class="text-2xl font-bold flex items-center text-light-theme-logo">
+                                <i class="fas fa-couch mr-2"></i> Domus Aurea
+                            </a>
+                        </div>
+
+                        <!-- Центральный блок: Навигация -->
+                        <nav class="hidden lg:flex items-center justify-center flex-grow">
+                            <div class="flex items-center space-x-6">
+                                <a href="{% url 'store:home' %}" class="text-light-theme-text-secondary hover:text-light-theme-link-hover font-medium">Главная</a>
+                                <a href="{% url 'store:new_arrivals' %}" class="text-light-theme-text-secondary hover:text-light-theme-link-hover font-medium">Новинки</a>
+                                <a href="{% url 'store:sale' %}" class="font-bold px-3 py-1 rounded-full bg-light-theme-sale-bg text-light-theme-sale-text">Распродажа</a>
+                                <a href="{% url 'blog:article_list' %}" class="text-light-theme-text-secondary hover:text-light-theme-link-hover font-medium">Блог</a>
+                                <a href="{% url 'store:contacts' %}" class="text-light-theme-text-secondary hover:text-light-theme-link-hover font-medium">Контакты</a>
+                            </div>
+                        </nav>
+
+                        <!-- Правый блок: Иконки и авторизация -->
+                        <div class="flex items-center space-x-5 flex-shrink-0">
+                            <button @click="openSearch()" class="text-light-theme-icon hover:text-light-theme-link-hover"><i class="fas fa-search text-xl"></i></button>
+                            <div x-data="{ count: {{ comparison|length }} }" @update-comparison-count.window="count = $event.detail.count" class="relative">
+                                <a href="{% url 'comparison:comparison_detail' %}" class="text-light-theme-icon hover:text-light-theme-link-hover">
+                                    <i class="fas fa-balance-scale text-xl"></i>
+                                    <span x-show="count > 0" x-text="count" x-cloak class="header-icon-badge"></span>
+                                </a>
+                            </div>
+                            <div x-data="{ count: {{ wishlist|length }} }" @update-wishlist-count.window="count = $event.detail.count" class="relative">
+                                <a href="{% url 'wishlist:wishlist_detail' %}" class="text-gray-600 hover:text-lavender-deep">
+                                    <i class="fas fa-heart text-xl"></i>
+                                    <span x-show="count > 0" x-text="count" x-cloak class="header-icon-badge"></span>
+                                </a>
+                            </div>
+                            <div x-data="{ count: {{ cart|length }} }" @update-cart-count.window="count = $event.detail.count" class="relative">
+                                <a href="{% url 'cart:cart_detail' %}" class="text-light-theme-icon hover:text-light-theme-link-hover">
+                                    <i class="fas fa-shopping-cart text-xl"></i>
+                                    <span x-show="count > 0" x-text="count" x-cloak class="header-icon-badge"></span>
+                                </a>
+                            </div>
+
+                            <!-- КНОПКА СМЕНЫ ТЕМЫ -->
+                            <button @click="toggleTheme()" class="theme-toggle" aria-label="Toggle theme">
+                                <i class="fas fa-sun" x-show="!isDarkMode" x-transition:enter="transition-transform duration-300" x-transition:enter-start="transform rotate-90 scale-0" x-transition:enter-end="transform rotate-0 scale-100"></i>
+                                <i class="fas fa-moon" x-show="isDarkMode" x-cloak x-transition:enter="transition-transform duration-300" x-transition:enter-start="transform -rotate-90 scale-0" x-transition:enter-end="transform rotate-0 scale-100"></i>
+                            </button>
+
+                            <div class="hidden md:flex items-center space-x-4 pl-4 border-l border-light-theme-border">
+                                {% if user.is_authenticated %}
+                                    <div x-data="{ open: false }" @click.away="open = false" class="relative">
+                                        <button @click="open = !open" class="text-light-theme-text-secondary hover:text-light-theme-link-hover font-medium flex items-center">
+                                            <i class="fas fa-user-circle text-xl text-lavender-dark mr-2"></i> {{ user.username }}
+                                        </button>
+                                        <div x-show="open" x-transition x-cloak class="absolute right-0 mt-3 w-48 bg-light-theme-header rounded-xl shadow-xl z-20 p-2 border border-light-theme-border">
+                                            <a href="{% url 'store:account' %}" class="block w-full text-left px-4 py-2 text-sm text-light-theme-text-secondary hover:bg-light-theme-hover hover:text-light-theme-link-hover rounded-lg">Личный кабинет</a>
+                                            <a href="{% url 'orders:order_list' %}" class="block w-full text-left px-4 py-2 text-sm text-light-theme-text-secondary hover:bg-light-theme-hover hover:text-light-theme-link-hover rounded-lg">Мои заказы</a>
+                                            <form action="{% url 'users:logout' %}" method="post">{% csrf_token %}<button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-500/10 hover:text-red-500 rounded-lg">Выйти</button></form>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <a href="{% url 'users:login' %}" class="text-light-theme-text-secondary hover:text-light-theme-link-hover font-medium">Войти</a>
+                                    <a href="{% url 'users:register' %}" class="btn-primary px-5 py-2 text-sm">Регистрация</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Навигация по категориям -->
+                <nav class="bg-light-theme-header-alt border-t border-light-theme-border transition-colors duration-500">
+                    <div class="container mx-auto px-4">
+                        <ul class="flex items-center justify-center h-12 space-x-8 text-sm font-medium">
+                            <li><a href="{% url 'store:product_list' %}" class="text-light-theme-text-secondary hover:text-light-theme-link-hover font-bold">Все товары</a></li>
+                            {% for cat in categories %}
+                                <li><a href="{{ cat.get_absolute_url }}" class="text-light-theme-text-secondary hover:text-light-theme-link-hover">{{ cat.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+
+            {% if messages %}
+            <div x-data="toastComponent()" x-init='
+                {% for message in messages %}
+                    addToast({ message: "{{ message }}", type: "{{ message.tags }}" });
+                {% endfor %}
+            '></div>
+            {% endif %}
+
+            <main class="py-8">
+                {% block content %}{% endblock %}
+            </main>
+            
+            <div x-show="searchOpen" @click.self="closeSearch()" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[99] p-4" x-cloak>
+                <div @click.away="closeSearch()" class="relative w-full max-w-2xl mx-auto mt-20">
+                    <div class="bg-light-theme-header rounded-xl shadow-2xl flex flex-col">
+                        <form x-ref="searchForm" :action="'{% url 'store:product_list' %}'" method="GET">
+                            <div class="flex items-center border-b p-1 border-light-theme-border">
+                                <i class="fas fa-search text-gray-400 text-lg mx-4"></i>
+                                <input type="search" name="q" x-ref="searchInput" x-model.debounce.300ms="query" @keydown.enter.prevent="submitSearch()" placeholder="Например, красный диван..." class="w-full text-lg focus:outline-none bg-transparent py-3 text-light-theme-text" autocomplete="off">
+                                <button type="button" @click="closeSearch()" class="ml-4 px-5 py-2 text-sm font-semibold text-light-theme-text-secondary bg-light-theme-hover rounded-lg hover:bg-light-theme-border transition-colors mr-2">Закрыть</button>
+                            </div>
+                        </form>
+
+                        <div class="max-h-[60vh] overflow-y-auto">
+                            <div x-show="query.length > 1" x-transition>
+                                <div x-show="isLoading" class="p-8 text-center text-gray-400">
+                                    <i class="fas fa-spinner fa-spin text-2xl"></i>
+                                </div>
+                                <ul x-show="!isLoading && suggestions.length > 0" class="divide-y divide-light-theme-border">
+                                    <template x-for="item in suggestions" :key="item.url">
+                                        <li class="p-4 hover:bg-light-theme-hover transition-colors">
+                                            <a :href="item.url" class="flex items-center gap-4">
+                                                <img :src="item.image_url" :alt="item.name" class="w-20 h-20 object-cover rounded-md flex-shrink-0">
+                                                <div class="flex-grow">
+                                                    <h4 class="font-semibold text-base text-light-theme-text" x-html="highlightMatch(item.name)"></h4>
+                                                    <div class="flex items-baseline gap-2 mt-1">
+                                                        <p class="font-bold text-lavender-dark text-lg" x-text="item.price + ' ₽'"></p>
+                                                        <template x-if="item.old_price">
+                                                            <p class="text-sm text-gray-400 line-through" x-text="item.old_price + ' ₽'"></p>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </template>
+                                </ul>
+
+                                <div x-show="!isLoading && suggestions.length > 0" class="p-4 border-t border-light-theme-border">
+                                    <button @click="submitSearch()" class="ripple-btn w-full btn-primary py-3 font-medium">Все результаты</button>
+                                </div>
+                                
+                                <div x-show="!isLoading && suggestions.length === 0" class="p-8 text-center text-gray-500">
+                                    <p>По запросу «<strong x-text="query"></strong>» ничего не найдено.</p>
+                                    <p class="text-sm mt-1">Попробуйте изменить формулировку.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ФУТЕР -->
+    <footer class="mt-auto bg-lavender-deep">
+        <div class="container mx-auto px-4 py-16">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+                <!-- Колонка с подпиской -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4 text-white">Подпишитесь на новости</h4>
+                    <p class="text-sm leading-relaxed mb-4 text-gray-300">Получайте первыми информацию о скидках, новинках и специальных предложениях.</p>
+                    <form class="flex" method="POST" action="{% url 'store:subscribe' %}">
+                        {% csrf_token %}
+                        <input type="email" name="email" required placeholder="Ваш email" class="w-full px-4 py-2 rounded-l-lg text-gray-800 focus:outline-none border-0 bg-lavender-medium placeholder-gray-500">
+                        <button type="submit" class="btn-primary px-5 font-medium rounded-r-lg rounded-l-none">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                    <div class="flex space-x-4 mt-6">
+                        <a href="#" class="social-link social-link-fb"><i class="fab fa-facebook-f text-lg"></i></a>
+                        <a href="#" class="social-link social-link-ig"><i class="fab fa-instagram text-lg"></i></a>
+                        <a href="#" class="social-link social-link-pt"><i class="fab fa-pinterest-p text-lg"></i></a>
+                        <a href="#" class="social-link social-link-yt"><i class="fab fa-youtube text-lg"></i></a>
+                    </div>
+                </div>
+                <!-- Быстрые ссылки -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4 text-white">Быстрые ссылки</h4>
+                    <ul class="footer-list">
+                        <li><a href="{% url 'store:about' %}" class="transition-colors text-gray-300 hover:text-white hover:underline">О нас</a></li>
+                        <li><a href="{% url 'blog:article_list' %}" class="transition-colors text-gray-300 hover:text-white hover:underline">Блог</a></li>
+                        <li><a href="{% url 'store:contacts' %}" class="transition-colors text-gray-300 hover:text-white hover:underline">Контакты</a></li>
+                        <li><a href="{% url 'store:static_page' 'faq' %}" class="transition-colors text-gray-300 hover:text-white hover:underline">FAQ</a></li>
+                        <li><a href="{% url 'store:static_page' 'privacy' %}" class="transition-colors text-gray-300 hover:text-white hover:underline">Политика конфиденциальности</a></li>
+                        <li><a href="{% url 'store:static_page' 'terms' %}" class="transition-colors text-gray-300 hover:text-white hover:underline">Условия использования</a></li>
+                    </ul>
+                </div>
+                <!-- Служба поддержки -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4 text-white">Служба поддержки</h4>
+                    <ul class="footer-list">
+                        <li>
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'store:account' %}" class="transition-colors text-gray-300 hover:text-white hover:underline">Мой аккаунт</a>
+                            {% else %}
+                                <a href="{% url 'users:login' %}" class="transition-colors text-gray-300 hover:text-white hover:underline">Мой аккаунт</a>
+                            {% endif %}
+                        </li>
+                        <li><a href="{% url 'store:track_order' %}" class="transition-colors text-gray-300 hover:text-white hover:underline">Отследить заказ</a></li>
+                        <li><a href="{% url 'store:static_page' 'returns' %}" class="transition-colors text-gray-300 hover:text-white hover:underline">Возвраты и обмен</a></li>
+                        <li><a href="{% url 'store:static_page' 'delivery' %}" class="transition-colors text-gray-300 hover:text-white hover:underline">Доставка</a></li>
+                        <li><a href="{% url 'store:static_page' 'warranty' %}" class="transition-colors text-gray-300 hover:text-white hover:underline">Гарантия</a></li>
+                        <li><a href="{% url 'store:contacts' %}" class="transition-colors text-gray-300 hover:text-white hover:underline">Связаться с нами</a></li>
+                    </ul>
+                </div>
+                <!-- Контакты -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4 text-white">Контакты</h4>
+                    <ul class="space-y-4 text-sm text-gray-300">
+                        <li class="flex items-start"><i class="fas fa-map-marker-alt mt-1 mr-3 text-lavender-dark"></i><span>г. Москва, ул. Мебельная, 42</span></li>
+                        <li class="flex items-start"><i class="fas fa-phone-alt mt-1 mr-3 text-lavender-dark"></i><span>+7 (495) 123-45-67</span></li>
+                        <li class="flex items-start"><i class="fas fa-envelope mt-1 mr-3 text-lavender-dark"></i><span>info@domusaurea.com</span></li>
+                        <li class="flex items-start"><i class="fas fa-clock mt-1 mr-3 text-lavender-dark"></i><span>Пн-Пт: 9:00 - 20:00<br>Сб-Вс: 10:00 - 18:00</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="py-6 border-t border-white/10">
+            <div class="container mx-auto px-4 text-center">
+                 <p class="text-sm text-gray-400">© {% now "Y" %} Domus Aurea. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <button id="scrollTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'});" class="fixed bottom-5 right-5 w-12 h-12 bg-lavender-dark text-white rounded-full hidden opacity-0 transition-opacity duration-300 shadow-lg hover:bg-lavender-deep z-40"><i class="fas fa-arrow-up"></i></button>
+    
+    <div x-data="toastComponent()" class="fixed top-24 right-4 z-[200] w-full max-w-sm space-y-3" x-cloak>
+        <template x-for="toast in toasts" :key="toast.id">
+            <div x-show="toast.visible" 
+                x-transition:enter="transition ease-out duration-300" 
+                x-transition:enter-start="transform translate-x-full opacity-0" 
+                x-transition:enter-end="transform translate-x-0 opacity-100" 
+                x-transition:leave="transition ease-in duration-300" 
+                x-transition:leave-start="opacity-100" 
+                x-transition:leave-end="opacity-0" 
+                class="p-4 rounded-lg shadow-lg text-white font-semibold flex items-center" 
+                :class="{ 'bg-green-500': toast.type === 'success', 'bg-red-500': toast.type === 'error', 'bg-blue-500': toast.type === 'info' }">
+                <i class="mr-3 text-lg" :class="{ 'fas fa-check-circle': toast.type === 'success', 'fas fa-times-circle': toast.type === 'error', 'fas fa-info-circle': toast.type === 'info' }"></i>
+                <span x-text="toast.message"></span>
+            </div>
+        </template>
+    </div>
+
+    <!-- Модальное окно "Быстрый просмотр" -->
+    <div x-show="$store.modal.isOpen && $store.modal.productId" 
+         @keydown.escape.window="$store.modal.close()"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[99] flex items-center justify-center p-4"
+         x-cloak>
+        
+        <div x-show="$store.modal.isOpen && $store.modal.productId"
+             @click.away="$store.modal.close()"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 scale-90"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-90"
+             class="relative w-full max-w-4xl max-h-[90vh] bg-light-theme-header rounded-2xl shadow-2xl flex flex-col"
+             x-data="quickViewModal()">
+            
+            <button @click.prevent="$store.modal.close()" class="absolute -top-3 -right-3 w-10 h-10 bg-white dark:bg-gray-800 rounded-full text-gray-700 dark:text-gray-200 hover:text-black dark:hover:text-white z-10 flex items-center justify-center shadow-lg">&times;</button>
+
+            <div class="overflow-y-auto p-8">
+                <template x-if="isLoading">
+                    <div class="h-96 flex items-center justify-center"><i class="fas fa-spinner fa-spin text-4xl text-lavender-dark"></i></div>
+                </template>
+                <template x-if="product">
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <img :src="product.image || '{% static 'images/placeholder.png' %}'" :alt="product.name" class="w-full h-auto object-cover rounded-xl">
+                        </div>
+                        <div class="text-light-theme-text">
+                            <h2 class="text-3xl font-bold" x-text="product.name"></h2>
+                            <div class="flex items-center gap-4 mt-4">
+                                <p class="text-3xl font-bold" x-text="formatPrice(product.final_price)"></p>
+                                <template x-if="product.old_price">
+                                    <p class="text-xl text-gray-400 line-through" x-text="formatPrice(product.old_price)"></p>
+                                </template>
+                            </div>
+                            <div class="prose prose-sm max-w-none mt-4" x-text="product.description"></div>
+                            <div class="mt-6 space-y-3">
+                                <button @click="handleUserAction($el, 'cart', 'add')" :data-product-id="product.id" class="w-full btn-secondary h-12 font-bold">В корзину</button>
+                                <a :href="product.url" class="block w-full text-center btn-primary h-12 font-bold leading-[3rem]">Подробнее</a>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- АУДИО ДЛЯ КЛИКА -->
+    <audio x-ref="themeSound" src="{% static 'sounds/switch.mp3' %}" preload="auto"></audio>
+    
+    <script>
+        function themeSwitcher() {
+            return {
+                isDarkMode: document.documentElement.classList.contains('dark'),
+                init() {
+                    // Alpine.js now just syncs with the reality set by the blocking script
+                    this.isDarkMode = localStorage.getItem('darkMode') === 'true';
+                },
+                toggleTheme() {
+                    this.isDarkMode = !this.isDarkMode;
+                    if (this.isDarkMode) {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                    localStorage.setItem('darkMode', this.isDarkMode);
+                    this.$refs.themeSound.currentTime = 0;
+                    this.$refs.themeSound.play();
+                }
+            }
+        }
+        function pageSetup() {
+            return {
+                bannerOpen: sessionStorage.getItem('specialOfferClosed') !== 'true',
+                closeBanner() {
+                    this.bannerOpen = false;
+                    sessionStorage.setItem('specialOfferClosed', 'true');
+                }
+            }
+        }
+    </script>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

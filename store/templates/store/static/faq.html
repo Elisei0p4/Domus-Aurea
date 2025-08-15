@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}{{ page_title }}{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+    <h1 class="text-4xl font-bold text-center mb-10" style="color: var(--lavender-deep);">{{ page_title }}</h1>
+    <div x-data="{ open: 1 }" class="space-y-4">
+        <!-- Question 1 -->
+        <div class="border rounded-lg">
+            <button @click="open = (open === 1 ? null : 1)" class="w-full flex justify-between items-center p-4 font-semibold text-left">
+                <span>Какие у вас сроки доставки?</span>
+                <i class="fas fa-chevron-down transition-transform" :class="{ 'rotate-180': open === 1 }"></i>
+            </button>
+            <div x-show="open === 1" x-collapse.duration.500ms class="p-4 pt-0 text-secondary">
+                <p>Доставка по Москве и Московской области обычно занимает от 2 до 5 рабочих дней. Сроки доставки в другие регионы могут варьироваться и будут уточнены при оформлении заказа.</p>
+            </div>
+        </div>
+        <!-- Question 2 -->
+        <div class="border rounded-lg">
+            <button @click="open = (open === 2 ? null : 2)" class="w-full flex justify-between items-center p-4 font-semibold text-left">
+                <span>Можно ли вернуть товар?</span>
+                <i class="fas fa-chevron-down transition-transform" :class="{ 'rotate-180': open === 2 }"></i>
+            </button>
+            <div x-show="open === 2" x-collapse.duration.500ms class="p-4 pt-0 text-secondary">
+                <p>Да, вы можете вернуть товар надлежащего качества в течение 14 дней с момента покупки, если он не был в употреблении и сохранены его товарный вид, потребительские свойства, а также документ, подтверждающий факт и условия покупки указанного товара.</p>
+            </div>
+        </div>
+        <!-- Question 3 -->
+        <div class="border rounded-lg">
+            <button @click="open = (open === 3 ? null : 3)" class="w-full flex justify-between items-center p-4 font-semibold text-left">
+                <span>Предоставляете ли вы гарантию на мебель?</span>
+                <i class="fas fa-chevron-down transition-transform" :class="{ 'rotate-180': open === 3 }"></i>
+            </button>
+            <div x-show="open === 3" x-collapse.duration.500ms class="p-4 pt-0 text-secondary">
+                <p>На всю нашу мебель предоставляется гарантия от производителя сроком от 12 до 24 месяцев в зависимости от товара. Подробные условия гарантии указаны в карточке товара и в гарантийном талоне.</p>
+            </div>
+        </div>
+        <!-- Question 4 -->
+        <div class="border rounded-lg">
+            <button @click="open = (open === 4 ? null : 4)" class="w-full flex justify-between items-center p-4 font-semibold text-left">
+                <span>Есть ли у вас услуга сборки мебели?</span>
+                <i class="fas fa-chevron-down transition-transform" :class="{ 'rotate-180': open === 4 }"></i>
+            </button>
+            <div x-show="open === 4" x-collapse.duration.500ms class="p-4 pt-0 text-secondary">
+                <p>Да, мы предоставляем услуги профессиональной сборки мебели. Стоимость услуги зависит от сложности и объема работ. Вы можете добавить услугу сборки при оформлении заказа.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

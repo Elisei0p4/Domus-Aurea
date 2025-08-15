@@ -1,0 +1,82 @@
+[
+{
+  "model": "store.category",
+  "pk": 1,
+  "fields": {
+    "name": "Диваны",
+    "slug": "divany",
+    "image": "categories/изображение_2025-08-15_212455292.png",
+    "is_featured": true
+  }
+},
+{
+  "model": "store.category",
+  "pk": 2,
+  "fields": {
+    "name": "Кровати",
+    "slug": "krovati",
+    "image": "categories/изображение_2025-08-15_212511116.png",
+    "is_featured": true
+  }
+},
+{
+  "model": "store.category",
+  "pk": 3,
+  "fields": {
+    "name": "Шкафы",
+    "slug": "shkafy",
+    "image": "categories/изображение_2025-08-15_212726107.png",
+    "is_featured": true
+  }
+},
+{
+  "model": "store.category",
+  "pk": 4,
+  "fields": {
+    "name": "Столы",
+    "slug": "stoly",
+    "image": "categories/изображение_2025-08-15_212523301.png",
+    "is_featured": true
+  }
+},
+{
+  "model": "store.category",
+  "pk": 5,
+  "fields": {
+    "name": "Стулья",
+    "slug": "stulia",
+    "image": "categories/изображение_2025-08-15_212636006.png",
+    "is_featured": true
+  }
+},
+{
+  "model": "store.category",
+  "pk": 6,
+  "fields": {
+    "name": "Кресла",
+    "slug": "kresla",
+    "image": "categories/изображение_2025-08-15_212534184.png",
+    "is_featured": true
+  }
+},
+{
+  "model": "store.category",
+  "pk": 7,
+  "fields": {
+    "name": "Подушки",
+    "slug": "podushki",
+    "image": "categories/изображение_2025-08-15_212712714.png",
+    "is_featured": true
+  }
+},
+{
+  "model": "store.category",
+  "pk": 8,
+  "fields": {
+    "name": "Комоды",
+    "slug": "komody",
+    "image": "categories/изображение_2025-08-15_212618125.png",
+    "is_featured": true
+  }
+}
+]

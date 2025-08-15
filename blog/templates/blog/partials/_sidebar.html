@@ -1,0 +1,47 @@
+{% load blog_tags %}
+
+<div class="space-y-8">
+    <div class="bg-white p-6 rounded-2xl shadow-lg">
+        <h3 class="sidebar-title">Поиск</h3>
+        <form action="#" method="get">
+            <div class="relative">
+                <input type="text" name="q" placeholder="Найти в блоге..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-lavender-dark">
+                <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-lavender-dark"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl shadow-lg">
+        <h3 class="sidebar-title">Популярное</h3>
+        {% get_most_commented_articles as most_commented_articles %}
+        <ul class="space-y-4">
+            {% for article in most_commented_articles %}
+            <li class="flex items-center space-x-3">
+                <a href="{{ article.get_absolute_url }}">
+                    {% if article.image %}
+                        <img src="{{ article.image.url }}" alt="" class="w-16 h-16 object-cover rounded-lg">
+                    {% else %}
+                        <div class="w-16 h-16 bg-gray-200 flex items-center justify-center rounded-lg">
+                            <i class="fas fa-image text-xl text-gray-400"></i>
+                        </div>
+                    {% endif %}
+                </a>
+                <div>
+                    <h4 class="font-semibold text-sm leading-tight"><a href="{{ article.get_absolute_url }}" class="hover:text-lavender-dark">{{ article.title }}</a></h4>
+                    <p class="text-xs text-secondary mt-1">{{ article.created_at|date:"d E Y" }}</p>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    
+    <div class="bg-white p-6 rounded-2xl shadow-lg">
+        <h3 class="sidebar-title">Теги</h3>
+        {% get_all_tags as all_tags %}
+        <div class="flex flex-wrap gap-2">
+            {% for tag in all_tags %}
+            <a href="{{ tag.get_absolute_url }}" class="tag">{{ tag.name }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+[flake8]
+ignore =
+    E203,
+    W503,
+    E501
+exclude =
+    */migrations/*,
+    .venv/,
+    venv/,
+    __pycache__,
+    .git,
+    .github
+max-line-length = 120
+import-order-style = google
+application-import-names = furniture, store, blog, cart, users, orders, wishlist, api

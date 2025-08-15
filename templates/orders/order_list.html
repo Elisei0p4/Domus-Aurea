@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}История заказов{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold mb-8" style="color: var(--lavender-deep);">История заказов</h1>
+    
+    <div class="bg-white rounded-2xl shadow-lg p-6">
+    {% if orders %}
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Заказ #</th>
+                        <th scope="col" class="px-6 py-3">Дата</th>
+                        <th scope="col" class="px-6 py-3">Статус</th>
+                        <th scope="col" class="px-6 py-3 text-right">Сумма</th>
+                        <th scope="col" class="px-6 py-3"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr class="bg-white border-b hover:bg-gray-50">
+                        <td class="px-6 py-4 font-medium text-gray-900">#{{ order.id }}</td>
+                        <td class="px-6 py-4">{{ order.created|date:"d E Y" }}</td>
+                        <td class="px-6 py-4">
+                            {% if order.paid %}
+                                <span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">Оплачен</span>
+                            {% else %}
+                                <span class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">Ожидает оплаты</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 font-bold text-right">{{ order.total_cost|floatformat:"0" }} ₽</td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="{{ order.get_absolute_url }}" class="font-medium text-lavender-dark hover:underline">Подробнее</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- Пагинация -->
+        {% if is_paginated %}
+            {% include 'partials/pagination.html' with page_obj=page_obj %}
+        {% endif %}
+    {% else %}
+        <div class="text-center py-12">
+            <i class="fas fa-box-open text-5xl text-gray-300 mb-4"></i>
+            <h2 class="text-xl font-bold text-gray-700">У вас еще нет заказов</h2>
+            <p class="text-gray-500 mt-2">Самое время это исправить!</p>
+            <a href="{% url 'store:product_list' %}" class="btn-primary px-6 py-2.5 font-medium mt-6 inline-block">В каталог</a>
+        </div>
+    {% endif %}
+    </div>
+</div>
+{% endblock %}

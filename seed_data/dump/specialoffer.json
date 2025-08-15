@@ -1,0 +1,28 @@
+[
+{
+  "model": "store.specialoffer",
+  "pk": 1,
+  "fields": {
+    "name": "диваны",
+    "image": "special_offers/kukhnyawebp.webp",
+    "link_url": "/shop/",
+    "alt_text": "",
+    "is_active": true,
+    "start_date": "2025-08-15T16:54:12Z",
+    "end_date": "2025-08-20T03:00:00Z"
+  }
+},
+{
+  "model": "store.specialoffer",
+  "pk": 2,
+  "fields": {
+    "name": "Проект © Клименко Елисей Владимирович.",
+    "image": "special_offers/изображение_2025-08-14_215426289.png",
+    "link_url": "/",
+    "alt_text": "",
+    "is_active": true,
+    "start_date": "2025-08-15T16:54:40Z",
+    "end_date": "2025-08-20T03:00:00Z"
+  }
+}
+]

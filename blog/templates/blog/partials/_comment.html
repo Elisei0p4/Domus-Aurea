@@ -1,0 +1,32 @@
+<div class="flex space-x-4" id="comment-{{ comment.id }}">
+    <div class="flex-shrink-0">
+        <div class="w-12 h-12 rounded-full bg-lavender-medium flex items-center justify-center">
+            <i class="fas fa-user text-2xl text-lavender-deep"></i>
+        </div>
+    </div>
+    <div class="flex-grow">
+        <div class="flex items-baseline justify-between">
+            <h4 class="font-bold">{{ comment.author_name }}</h4>
+            <span class="text-xs text-secondary">{{ comment.created_at|timesince }} назад</span>
+        </div>
+        <div class="prose prose-sm max-w-none mt-1">
+            {{ comment.body|linebreaks }}
+        </div>
+        <button onclick="reply({{ comment.id }})" class="text-sm font-semibold text-lavender-dark mt-2">Ответить</button>
+        
+        <!-- Форма ответа (скрыта по умолчанию) -->
+        <form id="comment-form-{{ comment.id }}" action="{% url 'blog:post_comment' article.id %}" method="post" class="hidden mt-4 ml-4 border-l-2 pl-4">
+            {% csrf_token %}
+            <input type="hidden" name="parent_id" value="{{ comment.id }}">
+            {{ comment_form.author_name }}
+            {{ comment_form.email }}
+            {{ comment_form.body }}
+            <button type="submit" class="btn-primary px-4 py-1.5 text-sm mt-2">Отправить ответ</button>
+        </form>
+
+        <!-- Рендеринг ответов на этот комментарий -->
+        {% for reply in comment.replies.all %}
+            {% include 'blog/partials/_comment.html' with comment=reply %}
+        {% endfor %}
+    </div>
+</div>
