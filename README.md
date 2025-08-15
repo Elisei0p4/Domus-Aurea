@@ -57,6 +57,8 @@
 2. **Настройте окружение**
    ```bash
    cp .env.example .env  # Linux/MacOS
+   ```
+   ```
    copy .env.example .env  # Windows CMD
    ```
 
