@@ -63,24 +63,26 @@
    ```
 
 2. **Настройте окружение**
+   Для Linux
    ```bash
-   cp .env.example .env  #Linux
+   cp .env.example .env
    ```
+   Для Windows
    ```
-   copy .env.example .env  #Windows
+   copy .env.example .env
    ```
 
-3. **Запустите проект**
+4. **Запустите проект**
    ```bash
    docker-compose up -d --build
    ```
 
-4. **Инициализируйте данные**
+5. **Инициализируйте данные**
    ```bash
    docker-compose exec web python manage.py seed_db
    ```
 
-5. **Создайте администратора**
+6. **Создайте администратора**
    ```bash
    docker-compose exec web python manage.py createsuperuser
    ```
