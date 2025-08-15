@@ -38,7 +38,7 @@
 
 ## 📸 Скриншоты
 <div align="center">
-  <img src="https://[via.placeholder.com](https://i.postimg.cc/qqrWzzR4/kukhnyawebp.webp)/800x400?text=Главная+страница" alt="Главная страница" width="400">
+  <img src="https://https://i.postimg.cc/qqrWzzR4/kukhnyawebp.webp/800x400?text=Главная+страница" alt="Главная страница" width="400">
   <img src="https://via.placeholder.com/800x400?text=Каталог+товаров" alt="Каталог товаров" width="400">
 </div>
 
