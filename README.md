@@ -55,37 +55,35 @@
    ```bash
    git clone https://github.com/Elisei0p4/Domus-Aurea.git
 
-git clone https://github.com/Elisei0p4/Domus-Aurea.git
+Настройте окружение
+<button onclick="navigator.clipboard.writeText('cp .env.example .env')">Copy (Linux/Mac)</button>
+<button onclick="navigator.clipboard.writeText('copy .env.example .env')">Copy (Windows)</button>
 
-2. Настройте окружение
+bash
+cp .env.example .env  # Linux/MacOS
+copy .env.example .env  # Windows CMD
+Запустите проект
+<button onclick="navigator.clipboard.writeText('docker-compose up -d --build')">Copy</button>
 
-cp .env.example .env  # Linux/MacOS  
-
-copy .env.example .env  # Windows CMD  
-
-3. Запустите проект
-
+bash
 docker-compose up -d --build
+Инициализируйте данные
+<button onclick="navigator.clipboard.writeText('docker-compose exec web python manage.py seed_db')">Copy</button>
 
-4. Инициализируйте данные
-
+bash
 docker-compose exec web python manage.py seed_db
+Создайте администратора
+<button onclick="navigator.clipboard.writeText('docker-compose exec web python manage.py createsuperuser')">Copy</button>
 
-5. Создайте администратора
-
+bash
 docker-compose exec web python manage.py createsuperuser
-
-
 🌐 Доступ к проекту
-Сайт: http://localhost:8000
+🌍 Сайт: http://localhost:8000
 
-Админка: http://localhost:8000/admin
+🔐 Админка: http://localhost:8000/admin
 
-API Docs:
+📚 API Docs:
 
 Swagger UI
 
 ReDoc
-
-
-Работодателю: Этот проект готов к немедленному запуску — просто следуйте инструкциям выше. Все зависимости изолированы в Docker, что гарантирует идентичную работу на любом компьютере. 🎯
