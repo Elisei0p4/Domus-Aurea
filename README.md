@@ -56,10 +56,10 @@
 
 2. **Настройте окружение**
    ```bash
-   cp .env.example .env  # Linux/MacOS
+   cp .env.example .env  #Linux
    ```
    ```
-   copy .env.example .env  # Windows CMD
+   copy .env.example .env  #Windows
    ```
 
 3. **Запустите проект**
