@@ -1,5 +1,4 @@
 # 🛋️ Domus Aurea – Django Furniture E-Commerce
-
 <div align="center">
   <img src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white" alt="Django">
   <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL">
@@ -50,40 +49,35 @@
 
 ### Пошаговая инструкция
 
-1. **Клонируйте репозиторий**  
-   <button onclick="navigator.clipboard.writeText('git clone https://github.com/Elisei0p4/Domus-Aurea.git')">Copy</button>
+1. **Клонируйте репозиторий**
    ```bash
    git clone https://github.com/Elisei0p4/Domus-Aurea.git
+   ```
 
-Настройте окружение
-<button onclick="navigator.clipboard.writeText('cp .env.example .env')">Copy (Linux/Mac)</button>
-<button onclick="navigator.clipboard.writeText('copy .env.example .env')">Copy (Windows)</button>
+2. **Настройте окружение**
+   ```bash
+   cp .env.example .env  # Linux/MacOS
+   copy .env.example .env  # Windows CMD
+   ```
 
-bash
-cp .env.example .env  # Linux/MacOS
-copy .env.example .env  # Windows CMD
-Запустите проект
-<button onclick="navigator.clipboard.writeText('docker-compose up -d --build')">Copy</button>
+3. **Запустите проект**
+   ```bash
+   docker-compose up -d --build
+   ```
 
-bash
-docker-compose up -d --build
-Инициализируйте данные
-<button onclick="navigator.clipboard.writeText('docker-compose exec web python manage.py seed_db')">Copy</button>
+4. **Инициализируйте данные**
+   ```bash
+   docker-compose exec web python manage.py seed_db
+   ```
 
-bash
-docker-compose exec web python manage.py seed_db
-Создайте администратора
-<button onclick="navigator.clipboard.writeText('docker-compose exec web python manage.py createsuperuser')">Copy</button>
+5. **Создайте администратора**
+   ```bash
+   docker-compose exec web python manage.py createsuperuser
+   ```
 
-bash
-docker-compose exec web python manage.py createsuperuser
-🌐 Доступ к проекту
-🌍 Сайт: http://localhost:8000
-
-🔐 Админка: http://localhost:8000/admin
-
-📚 API Docs:
-
-Swagger UI
-
-ReDoc
+### 🌐 Доступ к проекту
+- 🌍 Сайт: [http://localhost:8000](http://localhost:8000)
+- 🔐 Админка: [http://localhost:8000/admin](http://localhost:8000/admin)
+- 📚 API Docs:
+  - Swagger UI
+  - ReDoc
