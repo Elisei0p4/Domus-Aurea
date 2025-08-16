@@ -40,7 +40,7 @@
 <div align="center">
   <img src="https://i.postimg.cc/xd2sDp5P/2025-08-16-124142766.png" alt="Главная страница" width="400">
   <img src="https://i.postimg.cc/637TrfXB/2025-08-16-124424999.png" alt="Каталог товаров" width="400">
-  <img src="https://i.postimg.cc/5yB4gPkW/2025-08-16-124622510.png" alt="Каталог товаров" width="400">
+  <img src="https://i.postimg.cc/d3Yvh2QH/2025-08-16-124745386.png" alt="Каталог товаров" width="400">
   <img src="https://i.postimg.cc/y8QVL3nx/2025-08-16-124657529.png" alt="Каталог товаров" width="400">
 </div>
 
