@@ -1,4 +1,4 @@
-# 🛋️ Domus Aurea – Django Furniture E-Commerce
+<img width="1191" height="800" alt="image" src="https://github.com/user-attachments/assets/f98e63e8-e4d5-47a2-96c3-b9f0273f634a" /># 🛋️ Domus Aurea – Django Furniture E-Commerce
 <div align="center">
   <a href="https://www.djangoproject.com/" target="_blank">
     <img src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white" alt="Django">
@@ -39,7 +39,7 @@
 ## 📸 Скриншоты
 <div align="center">
   <img src="https://i.postimg.cc/xd2sDp5P/2025-08-16-124142766.png" alt="Главная страница" width="400">
-  <img src="https://via.placeholder.com/800x400?text=Каталог+товаров" alt="Каталог товаров" width="400">
+  <img src="https://i.postimg.cc/637TrfXB/2025-08-16-124424999.png" alt="Каталог товаров" width="400">
 </div>
 
 
