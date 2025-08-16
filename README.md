@@ -1,4 +1,4 @@
-<img width="1191" height="800" alt="image" src="https://github.com/user-attachments/assets/f98e63e8-e4d5-47a2-96c3-b9f0273f634a" /># 🛋️ Domus Aurea – Django Furniture E-Commerce
+### 🛋️ Domus Aurea – Django Furniture E-Commerce
 <div align="center">
   <a href="https://www.djangoproject.com/" target="_blank">
     <img src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white" alt="Django">
